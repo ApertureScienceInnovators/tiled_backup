@@ -3,7 +3,7 @@ build/
 bin/
 lib/tiled/plugins/*
 lib/*.so*
-Makefile*
+
 *.o
 *.qm
 *.moc
