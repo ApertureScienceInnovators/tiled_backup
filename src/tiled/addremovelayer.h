@@ -26,7 +26,7 @@
 namespace Tiled {
 
 class GroupLayer;
-class Layer;
+class TiledLayer;
 
 namespace Internal {
 
@@ -38,7 +38,7 @@ class MapDocument;
 class AddRemoveLayer : public QUndoCommand
 {
 public:
-    AddRemoveLayer(MapDocument *mapDocument, int index, Layer *layer,
+    AddRemoveLayer(MapDocument *mapDocument, int index, TiledLayer *layer,
                    GroupLayer *parentLayer);
 
     ~AddRemoveLayer();
@@ -49,7 +49,7 @@ protected:
 
 private:
     MapDocument *mMapDocument;
-    Layer *mLayer;
+    TiledLayer *mLayer;
     GroupLayer *mParentLayer;
     int mIndex;
 };
@@ -64,7 +64,7 @@ public:
      * Creates an undo command that adds the \a layer to \a parentLayer at
      * \a index.
      */
-    AddLayer(MapDocument *mapDocument, int index, Layer *layer, GroupLayer *parentLayer)
+    AddLayer(MapDocument *mapDocument, int index, TiledLayer *layer, GroupLayer *parentLayer)
         : AddRemoveLayer(mapDocument, index, layer, parentLayer)
     {
         setText(QCoreApplication::translate("Undo Commands", "Add Layer"));

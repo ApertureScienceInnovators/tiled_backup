@@ -24,7 +24,7 @@
 
 namespace Tiled {
 
-class Layer;
+class TiledLayer;
 
 namespace Internal {
 
@@ -34,7 +34,7 @@ class RenameLayer : public QUndoCommand
 {
 public:
     RenameLayer(MapDocument *mapDocument,
-                Layer *layer,
+                TiledLayer *layer,
                 const QString &name);
 
     void undo() override;
@@ -44,7 +44,7 @@ private:
     void swapName();
 
     MapDocument *mMapDocument;
-    Layer *mLayer;
+    TiledLayer *mLayer;
     QString mName;
 };
 

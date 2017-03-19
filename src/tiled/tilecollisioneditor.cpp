@@ -253,7 +253,7 @@ void TileCollisionEditor::applyChanges()
         return;
 
     MapDocument *dummyDocument = mMapScene->mapDocument();
-    Layer *objectGroup = dummyDocument->map()->layerAt(1);
+    TiledLayer *objectGroup = dummyDocument->map()->layerAt(1);
     ObjectGroup *clonedGroup = static_cast<ObjectGroup*>(objectGroup->clone());
 
     QUndoStack *undoStack = mTilesetDocument->undoStack();
@@ -355,7 +355,7 @@ void TileCollisionEditor::paste(ClipboardManager::PasteFlags flags)
     if (map->layerCount() != 1)
         return;
 
-    Layer *layer = map->layerAt(0);
+    TiledLayer *layer = map->layerAt(0);
 
     if (ObjectGroup *objectGroup = layer->asObjectGroup()) {
         MapDocument *dummyDocument = mMapScene->mapDocument();

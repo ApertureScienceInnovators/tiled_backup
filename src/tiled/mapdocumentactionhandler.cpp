@@ -263,7 +263,7 @@ void MapDocumentActionHandler::cut()
     if (!mMapDocument)
         return;
 
-    Layer *currentLayer = mMapDocument->currentLayer();
+    TiledLayer *currentLayer = mMapDocument->currentLayer();
     if (!currentLayer)
         return;
 
@@ -299,7 +299,7 @@ void MapDocumentActionHandler::delete_()
     if (!mMapDocument)
         return;
 
-    Layer *currentLayer = mMapDocument->currentLayer();
+    TiledLayer *currentLayer = mMapDocument->currentLayer();
     if (!currentLayer)
         return;
 
@@ -326,7 +326,7 @@ void MapDocumentActionHandler::selectAll()
     if (!mMapDocument)
         return;
 
-    Layer *layer = mMapDocument->currentLayer();
+    TiledLayer *layer = mMapDocument->currentLayer();
     if (!layer)
         return;
 
@@ -349,7 +349,7 @@ void MapDocumentActionHandler::selectInverse()
     if (!mMapDocument)
         return;
 
-    Layer *layer = mMapDocument->currentLayer();
+    TiledLayer *layer = mMapDocument->currentLayer();
     if (!layer)
         return;
 
@@ -376,7 +376,7 @@ void MapDocumentActionHandler::selectNone()
     if (!mMapDocument)
         return;
 
-    Layer *layer = mMapDocument->currentLayer();
+    TiledLayer *layer = mMapDocument->currentLayer();
     if (!layer)
         return;
 
@@ -426,25 +426,25 @@ void MapDocumentActionHandler::cropToSelection()
 void MapDocumentActionHandler::addTileLayer()
 {
     if (mMapDocument)
-        mMapDocument->addLayer(Layer::TileLayerType);
+        mMapDocument->addLayer(TiledLayer::TileLayerType);
 }
 
 void MapDocumentActionHandler::addObjectGroup()
 {
     if (mMapDocument)
-        mMapDocument->addLayer(Layer::ObjectGroupType);
+        mMapDocument->addLayer(TiledLayer::ObjectGroupType);
 }
 
 void MapDocumentActionHandler::addImageLayer()
 {
      if (mMapDocument)
-         mMapDocument->addLayer(Layer::ImageLayerType);
+         mMapDocument->addLayer(TiledLayer::ImageLayerType);
 }
 
 void MapDocumentActionHandler::addGroupLayer()
 {
     if (mMapDocument)
-        mMapDocument->addLayer(Layer::GroupLayerType);
+        mMapDocument->addLayer(TiledLayer::GroupLayerType);
 }
 
 void MapDocumentActionHandler::layerVia(MapDocumentActionHandler::LayerViaVariant variant)
@@ -453,7 +453,7 @@ void MapDocumentActionHandler::layerVia(MapDocumentActionHandler::LayerViaVarian
         return;
 
     auto *currentLayer = mMapDocument->currentLayer();
-    Layer *newLayer = nullptr;
+    TiledLayer *newLayer = nullptr;
     QRegion selectedArea;
     TileLayer *sourceLayer = nullptr;
     QList<MapObject*> selectedObjects;
@@ -461,7 +461,7 @@ void MapDocumentActionHandler::layerVia(MapDocumentActionHandler::LayerViaVarian
     const QString name = variant == ViaCopy ? tr("Layer via Copy") : tr("Layer via Cut");
 
     switch (currentLayer->layerType()) {
-    case Layer::TileLayerType: {
+    case TiledLayer::TileLayerType: {
         selectedArea = mMapDocument->selectedArea();
         if (selectedArea.isEmpty())
             return;
@@ -474,7 +474,7 @@ void MapDocumentActionHandler::layerVia(MapDocumentActionHandler::LayerViaVarian
         newLayer = newTileLayer;
         break;
     }
-    case Layer::ObjectGroupType: {
+    case TiledLayer::ObjectGroupType: {
         selectedObjects = mMapDocument->selectedObjects();
         if (selectedObjects.isEmpty())
             return;
@@ -513,11 +513,11 @@ void MapDocumentActionHandler::layerVia(MapDocumentActionHandler::LayerViaVarian
         undoStack->push(addLayer);
 
         switch (currentLayer->layerType()) {
-        case Layer::TileLayerType: {
+        case TiledLayer::TileLayerType: {
             undoStack->push(new EraseTiles(mMapDocument, sourceLayer, selectedArea));
             break;
         }
-        case Layer::ObjectGroupType:
+        case TiledLayer::ObjectGroupType:
             for (MapObject *oldObject : selectedObjects)
                 undoStack->push(new RemoveMapObject(mMapDocument, oldObject));
             break;
@@ -626,7 +626,7 @@ void MapDocumentActionHandler::moveObjectsToGroup(ObjectGroup *objectGroup)
 void MapDocumentActionHandler::updateActions()
 {
     Map *map = nullptr;
-    Layer *currentLayer = nullptr;
+    TiledLayer *currentLayer = nullptr;
     QRegion selection;
     int selectedObjectsCount = 0;
     bool canMergeDown = false;
@@ -641,8 +641,8 @@ void MapDocumentActionHandler::updateActions()
             int currentLayerIndex = currentLayer->siblingIndex();
             if (currentLayerIndex > 0) {
                 const auto layers = currentLayer->siblings();
-                Layer *upper = layers.at(currentLayerIndex);
-                Layer *lower = layers.at(currentLayerIndex - 1);
+                TiledLayer *upper = layers.at(currentLayerIndex);
+                TiledLayer *lower = layers.at(currentLayerIndex - 1);
                 canMergeDown = lower->canMergeWith(upper);
             }
         }

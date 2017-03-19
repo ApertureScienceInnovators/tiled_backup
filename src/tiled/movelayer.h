@@ -24,7 +24,7 @@
 
 namespace Tiled {
 
-class Layer;
+class TiledLayer;
 class Map;
 
 namespace Internal {
@@ -46,19 +46,19 @@ public:
      * @param layer       the layer to move
      * @param direction   the direction in which to move the layer
      */
-    MoveLayer(MapDocument *mapDocument, Layer *layer, Direction direction);
+    MoveLayer(MapDocument *mapDocument, TiledLayer *layer, Direction direction);
 
     void undo() override { moveLayer(); }
     void redo() override { moveLayer(); }
 
-    static bool canMoveUp(const Layer &layer);
-    static bool canMoveDown(const Layer &layer);
+    static bool canMoveUp(const TiledLayer &layer);
+    static bool canMoveDown(const TiledLayer &layer);
 
 private:
     void moveLayer();
 
     MapDocument *mMapDocument;
-    Layer *mLayer;
+    TiledLayer *mLayer;
     Direction mDirection;
 };
 

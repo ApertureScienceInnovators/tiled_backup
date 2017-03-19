@@ -75,7 +75,7 @@ void AbstractTileTool::mouseMoved(const QPointF &pos, Qt::KeyboardModifiers)
 {
     // Take into account the offset of the current layer
     QPointF offsetPos = pos;
-    if (Layer *layer = currentLayer()) {
+    if (TiledLayer *layer = currentLayer()) {
         offsetPos -= layer->totalOffset();
         mBrushItem->setLayerOffset(layer->totalOffset());
     }
@@ -146,7 +146,7 @@ void AbstractTileTool::updateBrushVisibility()
     // Show the tile brush only when a visible tile layer is selected
     bool showBrush = false;
     if (mBrushVisible) {
-        if (Layer *layer = currentTileLayer()) {
+        if (TiledLayer *layer = currentTileLayer()) {
             if (layer->isVisible())
                 showBrush = true;
         }

@@ -27,17 +27,17 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "layer.h"
+#include "tiled_layer.h"
 
 #include "grouplayer.h"
-#include "imagelayer.h"
+#include "tiled_imagelayer.h"
 #include "map.h"
 #include "objectgroup.h"
 #include "tilelayer.h"
 
 namespace Tiled {
 
-Layer::Layer(TypeFlag type, const QString &name, int x, int y) :
+TiledLayer::TiledLayer(TypeFlag type, const QString &name, int x, int y) :
     Object(LayerType),
     mName(name),
     mLayerType(type),
@@ -54,10 +54,10 @@ Layer::Layer(TypeFlag type, const QString &name, int x, int y) :
  * Returns the effective opacity, which is the opacity multiplied by the
  * opacity of any parent layers.
  */
-float Layer::effectiveOpacity() const
+float TiledLayer::effectiveOpacity() const
 {
     auto opacity = mOpacity;
-    const Layer *layer = this;
+    const TiledLayer *layer = this;
     while ((layer = layer->parentLayer()))
         opacity *= layer->opacity();
     return opacity;
@@ -67,9 +67,9 @@ float Layer::effectiveOpacity() const
  * Returns whether this layer is hidden. A visible layer may still be hidden,
  * when one of its parent layers is not visible.
  */
-bool Layer::isHidden() const
+bool TiledLayer::isHidden() const
 {
-    const Layer *layer = this;
+    const TiledLayer *layer = this;
     while (layer && layer->isVisible())
         layer = layer->parentLayer();
     return layer;      // encountered an invisible layer
@@ -78,9 +78,9 @@ bool Layer::isHidden() const
 /**
  * Returns whether the given \a candidate is this layer or one of its parents.
  */
-bool Layer::isParentOrSelf(const Layer *candidate) const
+bool TiledLayer::isParentOrSelf(const TiledLayer *candidate) const
 {
-    const Layer *layer = this;
+    const TiledLayer *layer = this;
     while (layer != candidate && layer->parentLayer())
         layer = layer->parentLayer();
     return layer == candidate;
@@ -89,7 +89,7 @@ bool Layer::isParentOrSelf(const Layer *candidate) const
 /**
  * Returns the depth of this layer in the hierarchy.
  */
-int Layer::depth() const
+int TiledLayer::depth() const
 {
     int d = 0;
     GroupLayer *p = mParentLayer;
@@ -103,36 +103,36 @@ int Layer::depth() const
 /**
  * Returns the index of this layer among its siblings.
  */
-int Layer::siblingIndex() const
+int TiledLayer::siblingIndex() const
 {
     if (mParentLayer)
-        return mParentLayer->layers().indexOf(const_cast<Layer*>(this));
+        return mParentLayer->layers().indexOf(const_cast<TiledLayer*>(this));
     if (mMap)
-        return mMap->layers().indexOf(const_cast<Layer*>(this));
+        return mMap->layers().indexOf(const_cast<TiledLayer*>(this));
     return 0;
 }
 
 /**
  * Returns the list of siblings of this layer, including this layer.
  */
-QList<Layer *> Layer::siblings() const
+QList<TiledLayer *> TiledLayer::siblings() const
 {
     if (mParentLayer)
         return mParentLayer->layers();
     if (mMap)
         return mMap->layers();
 
-    return QList<Layer *>();
+    return QList<TiledLayer *>();
 }
 
 /**
  * Computes the total offset. which is the offset including the offset of all
  * parent layers.
  */
-QPointF Layer::totalOffset() const
+QPointF TiledLayer::totalOffset() const
 {
     auto offset = mOffset;
-    const Layer *layer = this;
+    const TiledLayer *layer = this;
     while ((layer = layer->parentLayer()))
         offset += layer->offset();
     return offset;
@@ -149,7 +149,7 @@ QPointF Layer::totalOffset() const
  * \return the initialized clone (the same instance that was passed in)
  * \sa clone()
  */
-Layer *Layer::initializeClone(Layer *clone) const
+TiledLayer *TiledLayer::initializeClone(TiledLayer *clone) const
 {
     clone->mOffset = mOffset;
     clone->mOpacity = mOpacity;
@@ -158,28 +158,28 @@ Layer *Layer::initializeClone(Layer *clone) const
     return clone;
 }
 
-TileLayer *Layer::asTileLayer()
+TileLayer *TiledLayer::asTileLayer()
 {
     return isTileLayer() ? static_cast<TileLayer*>(this) : nullptr;
 }
 
-ObjectGroup *Layer::asObjectGroup()
+ObjectGroup *TiledLayer::asObjectGroup()
 {
     return isObjectGroup() ? static_cast<ObjectGroup*>(this) : nullptr;
 }
 
-ImageLayer *Layer::asImageLayer()
+TiledImageLayer *TiledLayer::asImageLayer()
 {
-    return isImageLayer() ? static_cast<ImageLayer*>(this) : nullptr;
+    return isImageLayer() ? static_cast<TiledImageLayer*>(this) : nullptr;
 }
 
-GroupLayer *Layer::asGroupLayer()
+GroupLayer *TiledLayer::asGroupLayer()
 {
     return isGroupLayer() ? static_cast<GroupLayer*>(this) : nullptr;
 }
 
 
-Layer *LayerIterator::next()
+TiledLayer *LayerIterator::next()
 {
     if (!mCurrentLayer) {
         // Traverse to the first layer of the map
@@ -202,7 +202,7 @@ Layer *LayerIterator::next()
     }
 
     // Traverse to next sibling
-    Layer *layer = siblings.at(index);
+    TiledLayer *layer = siblings.at(index);
 
     // If next layer is a group, traverse to its first child
     while (layer->isGroupLayer()) {
@@ -221,9 +221,9 @@ Layer *LayerIterator::next()
     return layer;
 }
 
-Layer *LayerIterator::previous()
+TiledLayer *LayerIterator::previous()
 {
-    Layer *layer = mCurrentLayer;
+    TiledLayer *layer = mCurrentLayer;
     int index = mSiblingIndex - 1;
 
     if (!layer) {
@@ -281,7 +281,7 @@ void LayerIterator::toBack()
  * Returns the global layer index for the given \a layer. Obtained by iterating
  * the layer's map while incrementing the index until layer is found.
  */
-int globalIndex(Layer *layer)
+int globalIndex(TiledLayer *layer)
 {
     if (!layer)
         return -1;
@@ -299,7 +299,7 @@ int globalIndex(Layer *layer)
  *
  * \sa globalIndex()
  */
-Layer *layerAtGlobalIndex(const Map *map, int index)
+TiledLayer *layerAtGlobalIndex(const Map *map, int index)
 {
     LayerIterator counter(map);
     while (counter.next() && index > 0)

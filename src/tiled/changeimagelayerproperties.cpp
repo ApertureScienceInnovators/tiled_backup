@@ -32,7 +32,7 @@ using namespace Tiled::Internal;
 
 ChangeImageLayerProperties::ChangeImageLayerProperties(
         MapDocument *mapDocument,
-        ImageLayer *imageLayer,
+        TiledImageLayer *imageLayer,
         const QColor &color,
         const QString &path)
     : QUndoCommand(

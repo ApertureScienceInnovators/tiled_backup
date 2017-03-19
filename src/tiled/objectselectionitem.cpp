@@ -349,7 +349,7 @@ void ObjectSelectionItem::mapChanged()
     syncOverlayItems(mMapDocument->selectedObjects());
 }
 
-void ObjectSelectionItem::layerAdded(Layer *layer)
+void ObjectSelectionItem::layerAdded(TiledLayer *layer)
 {
     ObjectGroup *objectGroup = layer->asObjectGroup();
     if (!objectGroup)
@@ -382,7 +382,7 @@ void ObjectSelectionItem::layerAboutToBeRemoved(GroupLayer *parentLayer, int ind
             delete mObjectLabels.take(object);
 }
 
-void ObjectSelectionItem::layerChanged(Layer *layer)
+void ObjectSelectionItem::layerChanged(TiledLayer *layer)
 {
     ObjectGroup *objectGroup = layer->asObjectGroup();
     if (!objectGroup)
@@ -476,7 +476,7 @@ void ObjectSelectionItem::addRemoveObjectLabels()
 
     switch (objectLabelVisibility()) {
     case Preferences::AllObjectLabels:
-        for (Layer *layer : mMapDocument->map()->layers()) {
+        for (TiledLayer *layer : mMapDocument->map()->layers()) {
             if (!layer->isVisible())
                 continue;
 

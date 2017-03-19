@@ -60,7 +60,7 @@ protected:
 
 private slots:
     void updateOpacitySlider();
-    void layerChanged(Layer *layer);
+    void layerChanged(TiledLayer *layer);
     void editLayerName();
     void sliderValueChanged(int opacity);
 
@@ -99,7 +99,7 @@ protected:
 private slots:
     void currentRowChanged(const QModelIndex &proxyIndex);
     void indexPressed(const QModelIndex &proxyIndex);
-    void currentLayerChanged(Layer *layer);
+    void currentLayerChanged(TiledLayer *layer);
 
 private:
     MapDocument *mMapDocument;

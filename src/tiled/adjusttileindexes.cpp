@@ -71,9 +71,9 @@ AdjustTileIndexes::AdjustTileIndexes(MapDocument *mapDocument,
 
     // Adjust tile references from map layers
     LayerIterator iterator(mapDocument->map());
-    while (Layer *layer = iterator.next()) {
+    while (TiledLayer *layer = iterator.next()) {
         switch (layer->layerType()) {
-        case Layer::TileLayerType: {
+        case TiledLayer::TileLayerType: {
             TileLayer *tileLayer = static_cast<TileLayer*>(layer);
             QRegion region = tileLayer->region(isFromTileset).translated(-layer->position());
 
@@ -106,7 +106,7 @@ AdjustTileIndexes::AdjustTileIndexes(MapDocument *mapDocument,
             break;
         }
 
-        case Layer::ObjectGroupType:
+        case TiledLayer::ObjectGroupType:
             for (MapObject *mapObject : *static_cast<ObjectGroup*>(layer)) {
                 if (isFromTileset(mapObject->cell())) {
                     MapObjectCell change;
@@ -117,8 +117,8 @@ AdjustTileIndexes::AdjustTileIndexes(MapDocument *mapDocument,
             }
             break;
 
-        case Layer::ImageLayerType:
-        case Layer::GroupLayerType:
+        case TiledLayer::ImageLayerType:
+        case TiledLayer::GroupLayerType:
             break;
         }
     }

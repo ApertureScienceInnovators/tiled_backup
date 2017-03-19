@@ -25,7 +25,7 @@
 
 namespace Tiled {
 
-class ImageLayer;
+class TiledImageLayer;
 
 namespace Internal {
 
@@ -42,7 +42,7 @@ public:
      * @param newPos        the new position of the image layer
      */
     ChangeImageLayerPosition(MapDocument *mapDocument,
-                             ImageLayer *imageLayer,
+                             TiledImageLayer *imageLayer,
                              const QPoint &newPos);
 
     void undo() override;
@@ -50,7 +50,7 @@ public:
 
 private:
     MapDocument *mMapDocument;
-    ImageLayer *mImageLayer;
+    TiledImageLayer *mImageLayer;
     const QPoint mUndoPos;
     const QPoint mRedoPos;
 };

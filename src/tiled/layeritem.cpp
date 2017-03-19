@@ -25,7 +25,7 @@
 namespace Tiled {
 namespace Internal {
 
-LayerItem::LayerItem(Layer *layer, QGraphicsItem *parent)
+LayerItem::LayerItem(TiledLayer *layer, QGraphicsItem *parent)
     : QGraphicsItem(parent)
     , mLayer(layer)
 {

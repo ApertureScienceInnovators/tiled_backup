@@ -31,7 +31,7 @@
 namespace Tiled {
 
 class GroupLayer;
-class Layer;
+class TiledLayer;
 class Map;
 class ObjectGroup;
 class Properties;
@@ -80,10 +80,10 @@ private:
     Properties toProperties(const QVariant &propertiesVariant,
                             const QVariant &propertyTypesVariant) const;
     SharedTileset toTileset(const QVariant &variant);
-    Layer *toLayer(const QVariant &variant);
+    TiledLayer *toLayer(const QVariant &variant);
     TileLayer *toTileLayer(const QVariantMap &variantMap);
     ObjectGroup *toObjectGroup(const QVariantMap &variantMap);
-    ImageLayer *toImageLayer(const QVariantMap &variantMap);
+    TiledImageLayer *toImageLayer(const QVariantMap &variantMap);
     GroupLayer *toGroupLayer(const QVariantMap &variantMap);
 
     QPolygonF toPolygon(const QVariant &variant) const;

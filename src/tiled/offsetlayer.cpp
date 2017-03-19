@@ -35,7 +35,7 @@ using namespace Tiled;
 using namespace Tiled::Internal;
 
 OffsetLayer::OffsetLayer(MapDocument *mapDocument,
-                         Layer *layer,
+                         TiledLayer *layer,
                          const QPoint &offset,
                          const QRect &bounds,
                          bool wrapX,
@@ -48,22 +48,22 @@ OffsetLayer::OffsetLayer(MapDocument *mapDocument,
     , mOffsetLayer(nullptr)
 {
     switch (mOriginalLayer->layerType()) {
-    case Layer::TileLayerType:
+    case TiledLayer::TileLayerType:
         mOffsetLayer = layer->clone();
         static_cast<TileLayer*>(mOffsetLayer)->offsetTiles(offset, bounds, wrapX, wrapY);
         break;
-    case Layer::ObjectGroupType:
+    case TiledLayer::ObjectGroupType:
         mOffsetLayer = layer->clone();
         // fall through
-    case Layer::ImageLayerType:
-    case Layer::GroupLayerType: {
+    case TiledLayer::ImageLayerType:
+    case TiledLayer::GroupLayerType: {
         // These layers need offset and bounds converted to pixel units
         MapRenderer *renderer = mapDocument->renderer();
         const QPointF origin = renderer->tileToPixelCoords(QPointF());
         const QPointF pixelOffset = renderer->tileToPixelCoords(offset) - origin;
         const QRectF pixelBounds = renderer->tileToPixelCoords(bounds);
 
-        if (mOriginalLayer->layerType() == Layer::ObjectGroupType) {
+        if (mOriginalLayer->layerType() == TiledLayer::ObjectGroupType) {
             static_cast<ObjectGroup*>(mOffsetLayer)->offsetObjects(pixelOffset, pixelBounds, wrapX, wrapY);
         } else {
             // (wrapping not supported for image layers and group layers)

@@ -35,7 +35,7 @@
 #include "grouplayer.h"
 #include "map.h"
 #include "mapobject.h"
-#include "imagelayer.h"
+#include "tiled_imagelayer.h"
 #include "objectgroup.h"
 #include "savefile.h"
 #include "tile.h"
@@ -84,13 +84,13 @@ private:
     void writeMap(QXmlStreamWriter &w, const Map &map);
     void writeTileset(QXmlStreamWriter &w, const Tileset &tileset,
                       unsigned firstGid);
-    void writeLayers(QXmlStreamWriter &w, const QList<Layer *> &layers);
+    void writeLayers(QXmlStreamWriter &w, const QList<TiledLayer *> &layers);
     void writeTileLayer(QXmlStreamWriter &w, const TileLayer &tileLayer);
-    void writeLayerAttributes(QXmlStreamWriter &w, const Layer &layer);
+    void writeLayerAttributes(QXmlStreamWriter &w, const TiledLayer &layer);
     void writeObjectGroup(QXmlStreamWriter &w, const ObjectGroup &objectGroup);
     void writeObject(QXmlStreamWriter &w, const MapObject &mapObject);
     void writeObjectText(QXmlStreamWriter &w, const TextData &textData);
-    void writeImageLayer(QXmlStreamWriter &w, const ImageLayer &imageLayer);
+    void writeImageLayer(QXmlStreamWriter &w, const TiledImageLayer &imageLayer);
     void writeGroupLayer(QXmlStreamWriter &w, const GroupLayer &groupLayer);
     void writeProperties(QXmlStreamWriter &w,
                          const Properties &properties);
@@ -423,20 +423,20 @@ void MapWriterPrivate::writeTileset(QXmlStreamWriter &w, const Tileset &tileset,
     w.writeEndElement();
 }
 
-void MapWriterPrivate::writeLayers(QXmlStreamWriter &w, const QList<Layer*> &layers)
+void MapWriterPrivate::writeLayers(QXmlStreamWriter &w, const QList<TiledLayer*> &layers)
 {
-    for (const Layer *layer : layers) {
+    for (const TiledLayer *layer : layers) {
         switch (layer->layerType()) {
-        case Layer::TileLayerType:
+        case TiledLayer::TileLayerType:
             writeTileLayer(w, *static_cast<const TileLayer*>(layer));
             break;
-        case Layer::ObjectGroupType:
+        case TiledLayer::ObjectGroupType:
             writeObjectGroup(w, *static_cast<const ObjectGroup*>(layer));
             break;
-        case Layer::ImageLayerType:
-            writeImageLayer(w, *static_cast<const ImageLayer*>(layer));
+        case TiledLayer::ImageLayerType:
+            writeImageLayer(w, *static_cast<const TiledImageLayer*>(layer));
             break;
-        case Layer::GroupLayerType:
+        case TiledLayer::GroupLayerType:
             writeGroupLayer(w, *static_cast<const GroupLayer*>(layer));
             break;
         }
@@ -512,7 +512,7 @@ void MapWriterPrivate::writeTileLayer(QXmlStreamWriter &w,
 }
 
 void MapWriterPrivate::writeLayerAttributes(QXmlStreamWriter &w,
-                                            const Layer &layer)
+                                            const TiledLayer &layer)
 {
     if (!layer.name().isEmpty())
         w.writeAttribute(QLatin1String("name"), layer.name());
@@ -525,7 +525,7 @@ void MapWriterPrivate::writeLayerAttributes(QXmlStreamWriter &w,
     if (y != 0)
         w.writeAttribute(QLatin1String("y"), QString::number(y));
 
-    if (layer.layerType() == Layer::TileLayerType) {
+    if (layer.layerType() == TiledLayer::TileLayerType) {
         auto &tileLayer = static_cast<const TileLayer&>(layer);
         w.writeAttribute(QLatin1String("width"),
                          QString::number(tileLayer.width()));
@@ -681,7 +681,7 @@ void MapWriterPrivate::writeObjectText(QXmlStreamWriter &w, const TextData &text
 }
 
 void MapWriterPrivate::writeImageLayer(QXmlStreamWriter &w,
-                                       const ImageLayer &imageLayer)
+                                       const TiledImageLayer &imageLayer)
 {
     w.writeStartElement(QLatin1String("imagelayer"));
     writeLayerAttributes(w, imageLayer);

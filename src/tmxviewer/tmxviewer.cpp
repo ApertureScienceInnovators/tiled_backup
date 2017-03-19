@@ -159,7 +159,7 @@ public:
         setFlag(QGraphicsItem::ItemHasNoContents);
 
         // Create a child item for each layer
-        for (Layer *layer : map->layers()) {
+        for (TiledLayer *layer : map->layers()) {
             if (TileLayer *tileLayer = layer->asTileLayer()) {
                 new TileLayerItem(tileLayer, renderer, this);
             } else if (ObjectGroup *objectGroup = layer->asObjectGroup()) {

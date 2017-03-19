@@ -29,7 +29,7 @@ namespace Internal {
 
 AddRemoveLayer::AddRemoveLayer(MapDocument *mapDocument,
                                int index,
-                               Layer *layer,
+                               TiledLayer *layer,
                                GroupLayer *parentLayer)
     : mMapDocument(mapDocument)
     , mLayer(layer)

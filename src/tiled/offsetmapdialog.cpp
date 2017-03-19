@@ -48,20 +48,20 @@ OffsetMapDialog::~OffsetMapDialog()
     delete mUi;
 }
 
-QList<Layer *> OffsetMapDialog::affectedLayers() const
+QList<TiledLayer *> OffsetMapDialog::affectedLayers() const
 {
-    QList<Layer *> layers;
+    QList<TiledLayer *> layers;
 
     LayerIterator iterator(mMapDocument->map());
 
     switch (layerSelection()) {
     case AllVisibleLayers:
-        while (Layer *layer = iterator.next())
+        while (TiledLayer *layer = iterator.next())
             if (!layer->isGroupLayer() && layer->isVisible())
                 layers.append(layer);
         break;
     case AllLayers:
-        while (Layer *layer = iterator.next())
+        while (TiledLayer *layer = iterator.next())
             if (!layer->isGroupLayer())
                 layers.append(layer);
         break;

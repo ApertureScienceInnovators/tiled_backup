@@ -31,7 +31,7 @@
 namespace Tiled {
 namespace Internal {
 
-MoveLayer::MoveLayer(MapDocument *mapDocument, Layer *layer, Direction direction):
+MoveLayer::MoveLayer(MapDocument *mapDocument, TiledLayer *layer, Direction direction):
     mMapDocument(mapDocument),
     mLayer(layer),
     mDirection(direction)
@@ -41,12 +41,12 @@ MoveLayer::MoveLayer(MapDocument *mapDocument, Layer *layer, Direction direction
             QCoreApplication::translate("Undo Commands", "Raise Layer"));
 }
 
-bool MoveLayer::canMoveUp(const Layer &layer)
+bool MoveLayer::canMoveUp(const TiledLayer &layer)
 {
     return layer.parentLayer() || layer.siblingIndex() < layer.siblings().size() - 1;
 }
 
-bool MoveLayer::canMoveDown(const Layer &layer)
+bool MoveLayer::canMoveDown(const TiledLayer &layer)
 {
     return layer.parentLayer() || layer.siblingIndex() > 0;
 }

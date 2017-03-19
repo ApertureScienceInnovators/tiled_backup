@@ -26,7 +26,7 @@
 namespace Tiled {
 
 class GroupLayer;
-class Layer;
+class TiledLayer;
 class Map;
 
 namespace Internal {
@@ -68,29 +68,29 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation,
                         int role = Qt::DisplayRole) const override;
 
-    QModelIndex index(Layer *layer) const;
-    Layer *toLayer(const QModelIndex &index) const;
+    QModelIndex index(TiledLayer *layer) const;
+    TiledLayer *toLayer(const QModelIndex &index) const;
 
     MapDocument *mapDocument() const;
     void setMapDocument(MapDocument *mapDocument);
 
-    void insertLayer(GroupLayer *parentLayer, int index, Layer *layer);
-    Layer *takeLayerAt(GroupLayer *parentLayer, int index);
-    void replaceLayer(Layer *layer, Layer *replacement);
+    void insertLayer(GroupLayer *parentLayer, int index, TiledLayer *layer);
+    TiledLayer *takeLayerAt(GroupLayer *parentLayer, int index);
+    void replaceLayer(TiledLayer *layer, TiledLayer *replacement);
 
-    void setLayerVisible(Layer *layer, bool visible);
-    void setLayerOpacity(Layer *layer, float opacity);
-    void setLayerOffset(Layer *layer, const QPointF &offset);
+    void setLayerVisible(TiledLayer *layer, bool visible);
+    void setLayerOpacity(TiledLayer *layer, float opacity);
+    void setLayerOffset(TiledLayer *layer, const QPointF &offset);
 
-    void renameLayer(Layer *layer, const QString &name);
+    void renameLayer(TiledLayer *layer, const QString &name);
 
-    void toggleOtherLayers(Layer *layer);
+    void toggleOtherLayers(TiledLayer *layer);
 
 signals:
-    void layerAdded(Layer *layer);
+    void layerAdded(TiledLayer *layer);
     void layerAboutToBeRemoved(GroupLayer *parentLayer, int index);
-    void layerRemoved(Layer *layer);
-    void layerChanged(Layer *layer);
+    void layerRemoved(TiledLayer *layer);
+    void layerChanged(TiledLayer *layer);
 
 private:
     MapDocument *mMapDocument;

@@ -24,7 +24,7 @@
 
 namespace Tiled {
 
-class Layer;
+class TiledLayer;
 
 namespace Internal {
 
@@ -51,9 +51,9 @@ private slots:
     void selectionChanged(const QRegion &newSelection,
                           const QRegion &oldSelection);
 
-    void layerChanged(Layer *layer);
+    void layerChanged(TiledLayer *layer);
 
-    void currentLayerChanged(Layer *layer);
+    void currentLayerChanged(TiledLayer *layer);
 
 private:
     void updateBoundingRect();

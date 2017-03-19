@@ -33,8 +33,8 @@ class QtVariantPropertyManager;
 namespace Tiled {
 
 class Object;
-class ImageLayer;
-class Layer;
+class TiledImageLayer;
+class TiledLayer;
 class Map;
 class MapObject;
 class ObjectGroup;
@@ -89,9 +89,9 @@ private slots:
     void mapChanged();
     void objectsChanged(const QList<MapObject*> &objects);
     void objectsTypeChanged(const QList<MapObject*> &objects);
-    void layerChanged(Layer *layer);
+    void layerChanged(TiledLayer *layer);
     void objectGroupChanged(ObjectGroup *objectGroup);
-    void imageLayerChanged(ImageLayer *imageLayer);
+    void imageLayerChanged(TiledImageLayer *imageLayer);
     void tilesetChanged(Tileset *tileset);
     void tileChanged(Tile *tile);
     void tileTypeChanged(Tile *tile);

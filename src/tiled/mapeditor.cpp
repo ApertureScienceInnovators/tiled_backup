@@ -305,7 +305,7 @@ void MapEditor::addDocument(Document *document)
         view->verticalScrollBar()->setSliderPosition(ver);
 
         int layerIndex = mapState.value(QLatin1String("selectedLayer")).toInt();
-        if (Layer *layer = layerAtGlobalIndex(mapDocument->map(), layerIndex))
+        if (TiledLayer *layer = layerAtGlobalIndex(mapDocument->map(), layerIndex))
             mapDocument->setCurrentLayer(layer);
     }
 }
@@ -491,7 +491,7 @@ void MapEditor::paste(ClipboardManager::PasteFlags flags)
     if (!mCurrentMapDocument)
         return;
 
-    Layer *currentLayer = mCurrentMapDocument->currentLayer();
+    TiledLayer *currentLayer = mCurrentMapDocument->currentLayer();
     if (!currentLayer)
         return;
 
@@ -508,7 +508,7 @@ void MapEditor::paste(ClipboardManager::PasteFlags flags)
     tilesetManager->addReferences(map->tilesets());
 
     mCurrentMapDocument->unifyTilesets(map.data());
-    Layer *layer = map->layerAt(0);
+    TiledLayer *layer = map->layerAt(0);
 
     if (layer->isTileLayer()) {
         if (flags & ClipboardManager::PasteInPlace) {
@@ -630,7 +630,7 @@ void MapEditor::layerComboActivated()
     const QModelIndex comboIndex = mLayerComboBox->currentModelIndex();
     const QModelIndex reversedIndex = mUncheckableProxyModel->mapToSource(comboIndex);
     const QModelIndex sourceIndex = mReversingProxyModel->mapToSource(reversedIndex);
-    Layer *layer = mCurrentMapDocument->layerModel()->toLayer(sourceIndex);
+    TiledLayer *layer = mCurrentMapDocument->layerModel()->toLayer(sourceIndex);
     if (!layer)
         return;
 

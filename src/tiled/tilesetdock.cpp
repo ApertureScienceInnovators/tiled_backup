@@ -130,7 +130,7 @@ static void removeTileReferences(MapDocument *mapDocument,
 {
     QUndoStack *undoStack = mapDocument->undoStack();
 
-    for (Layer *layer : mapDocument->map()->layers()) {
+    for (TiledLayer *layer : mapDocument->map()->layers()) {
         if (TileLayer *tileLayer = layer->asTileLayer()) {
             const QRegion refs = tileLayer->region(condition);
             if (!refs.isEmpty())

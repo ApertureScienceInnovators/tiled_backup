@@ -31,7 +31,7 @@
 
 namespace Tiled {
 
-class Layer;
+class TiledLayer;
 class Map;
 class MapObject;
 class ObjectGroup;
@@ -61,7 +61,7 @@ public:
     QSet<QString> names; // all names
 };
 
-class RuleOutput : public QMap<Layer*, int>
+class RuleOutput : public QMap<TiledLayer*, int>
 {
 public:
     QString index;

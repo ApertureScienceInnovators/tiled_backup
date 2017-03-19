@@ -30,7 +30,7 @@ using namespace Tiled::Internal;
 
 ChangeImageLayerPosition::ChangeImageLayerPosition(
         MapDocument *mapDocument,
-        ImageLayer *imageLayer,
+        TiledImageLayer *imageLayer,
         const QPoint &newPos)
     : QUndoCommand(
           QCoreApplication::translate(

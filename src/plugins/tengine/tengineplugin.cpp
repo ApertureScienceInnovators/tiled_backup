@@ -83,7 +83,7 @@ bool TenginePlugin::write(const Tiled::Map *map, const QString &fileName)
     for (int y = 0; y < height; ++y) {
         for (int x = 0; x < width; ++x) {
             Properties currentTile = cachedTiles["?"];
-            for (Layer *layer : map->layers()) {
+            for (TiledLayer *layer : map->layers()) {
                 // If the layer name does not start with one of the tile properties, skip it
                 QString layerKey;
                 QListIterator<QString> propertyIterator = propertyOrder;
@@ -197,7 +197,7 @@ bool TenginePlugin::write(const Tiled::Map *map, const QString &fileName)
 
     // Check for an ObjectGroup named AddSpot
     out << endl << "-- addSpot section" << endl;
-    foreach (Layer *layer, map->layers()) {
+    foreach (TiledLayer *layer, map->layers()) {
         ObjectGroup *objectLayer = layer->asObjectGroup();
         if (objectLayer && objectLayer->name().startsWith("addspot", Qt::CaseInsensitive)) {
             foreach (const MapObject *obj, objectLayer->objects()) {
@@ -220,7 +220,7 @@ bool TenginePlugin::write(const Tiled::Map *map, const QString &fileName)
 
     // Check for an ObjectGroup named AddZone
     out << endl << "-- addZone section" << endl;
-    foreach (Layer *layer, map->layers()) {
+    foreach (TiledLayer *layer, map->layers()) {
         ObjectGroup *objectLayer = layer->asObjectGroup();
         if (objectLayer && objectLayer->name().startsWith("addzone", Qt::CaseInsensitive)) {
             foreach (MapObject *obj, objectLayer->objects()) {

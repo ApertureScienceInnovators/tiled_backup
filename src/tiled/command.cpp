@@ -49,7 +49,7 @@ QString Command::finalCommand() const
             QString(QLatin1String("\"%1\"")).arg(mapPath));
 
         if (MapDocument *mapDocument = qobject_cast<MapDocument*>(document)) {
-            if (const Layer *layer = mapDocument->currentLayer()) {
+            if (const TiledLayer *layer = mapDocument->currentLayer()) {
                 finalCommand.replace(QLatin1String("%layername"),
                                      QString(QLatin1String("\"%1\"")).arg(layer->name()));
             }

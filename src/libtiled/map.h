@@ -30,7 +30,7 @@
 
 #pragma once
 
-#include "layer.h"
+#include "tiled_layer.h"
 #include "object.h"
 #include "tileset.h"
 
@@ -225,31 +225,31 @@ public:
      * Convenience function that returns the number of layers of this map that
      * match the given \a type.
      */
-    int layerCount(Layer::TypeFlag type) const;
+    int layerCount(TiledLayer::TypeFlag type) const;
 
     int tileLayerCount() const
-    { return layerCount(Layer::TileLayerType); }
+    { return layerCount(TiledLayer::TileLayerType); }
 
     int objectGroupCount() const
-    { return layerCount(Layer::ObjectGroupType); }
+    { return layerCount(TiledLayer::ObjectGroupType); }
 
     int imageLayerCount() const
-    { return layerCount(Layer::ImageLayerType); }
+    { return layerCount(TiledLayer::ImageLayerType); }
 
     int groupLayerCount() const
-    { return layerCount(Layer::GroupLayerType); }
+    { return layerCount(TiledLayer::GroupLayerType); }
 
     /**
      * Returns the layer at the specified index.
      */
-    Layer *layerAt(int index) const
+    TiledLayer *layerAt(int index) const
     { return mLayers.at(index); }
 
     /**
      * Returns the list of layers of this map. This is useful when you want to
      * use foreach.
      */
-    const QList<Layer*> &layers() const { return mLayers; }
+    const QList<TiledLayer*> &layers() const { return mLayers; }
 
     QList<ObjectGroup*> objectGroups() const;
     QList<TileLayer*> tileLayers() const;
@@ -257,7 +257,7 @@ public:
     /**
      * Adds a layer to this map.
      */
-    void addLayer(Layer *layer);
+    void addLayer(TiledLayer *layer);
 
     /**
      * Returns the index of the layer given by \a layerName, or -1 if no
@@ -267,18 +267,18 @@ public:
      * searched.
      */
     int indexOfLayer(const QString &layerName,
-                     unsigned layerTypes = Layer::AnyLayerType) const;
+                     unsigned layerTypes = TiledLayer::AnyLayerType) const;
 
     /**
      * Adds a layer to this map, inserting it at the given index.
      */
-    void insertLayer(int index, Layer *layer);
+    void insertLayer(int index, TiledLayer *layer);
 
     /**
      * Removes the layer at the given index from this map and returns it.
      * The caller becomes responsible for the lifetime of this layer.
      */
-    Layer *takeLayerAt(int index);
+    TiledLayer *takeLayerAt(int index);
 
     /**
      * Adds a tileset to this map. The map does not take ownership over its
@@ -370,7 +370,7 @@ public:
 private:
     friend class GroupLayer;    // so it cal call adoptLayer
 
-    void adoptLayer(Layer *layer);
+    void adoptLayer(TiledLayer *layer);
 
     void recomputeDrawMargins() const;
 
@@ -386,7 +386,7 @@ private:
     QColor mBackgroundColor;
     mutable QMargins mDrawMargins;
     mutable bool mDrawMarginsDirty;
-    QList<Layer*> mLayers;
+    QList<TiledLayer*> mLayers;
     QVector<SharedTileset> mTilesets;
     LayerDataFormat mLayerDataFormat;
     int mNextObjectId;

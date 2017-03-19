@@ -29,7 +29,7 @@ namespace Tiled {
 namespace Internal {
 
 ReparentLayers::ReparentLayers(MapDocument *mapDocument,
-                               const QList<Layer *> &layers,
+                               const QList<TiledLayer *> &layers,
                                GroupLayer *layerParent,
                                int index,
                                QUndoCommand *parent)

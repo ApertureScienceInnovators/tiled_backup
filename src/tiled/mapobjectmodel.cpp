@@ -55,7 +55,7 @@ QModelIndex MapObjectModel::index(int row, int column,
     }
 
     GroupLayer *parentLayer = toGroupLayer(parent); // may be nullptr
-    const QList<Layer *> &layers = filteredChildLayers(parentLayer);
+    const QList<TiledLayer *> &layers = filteredChildLayers(parentLayer);
 
     if (row < layers.size())
         return createIndex(row, column, layers.at(row));
@@ -71,7 +71,7 @@ QModelIndex MapObjectModel::parent(const QModelIndex &index) const
     Object *object = static_cast<Object*>(index.internalPointer());
     switch (object->typeId()) {
     case Object::LayerType:
-        if (Layer *layer = static_cast<Layer*>(object)->parentLayer())
+        if (TiledLayer *layer = static_cast<TiledLayer*>(object)->parentLayer())
             return this->index(layer);
         break;
     case Object::MapObjectType:
@@ -92,11 +92,11 @@ int MapObjectModel::rowCount(const QModelIndex &parent) const
 
     Object *object = static_cast<Object*>(parent.internalPointer());
     if (object->typeId() == Object::LayerType) {
-        Layer *layer = static_cast<Layer*>(object);
+        TiledLayer *layer = static_cast<TiledLayer*>(object);
         switch (layer->layerType()) {
-        case Layer::GroupLayerType:
+        case TiledLayer::GroupLayerType:
             return filteredChildLayers(static_cast<GroupLayer*>(layer)).size();
-        case Layer::ObjectGroupType:
+        case TiledLayer::ObjectGroupType:
             return static_cast<ObjectGroup*>(layer)->objectCount();
         default:
             break;
@@ -152,7 +152,7 @@ QVariant MapObjectModel::data(const QModelIndex &index, int role) const
             return QVariant();
         }
     }
-    if (Layer *layer = toLayer(index)) {
+    if (TiledLayer *layer = toLayer(index)) {
         switch (role) {
         case Qt::DisplayRole:
         case Qt::EditRole:
@@ -216,7 +216,7 @@ bool MapObjectModel::setData(const QModelIndex &index, const QVariant &value,
         }
         return false;
     }
-    if (Layer *layer = toLayer(index)) {
+    if (TiledLayer *layer = toLayer(index)) {
         switch (role) {
         case Qt::CheckStateRole: {
             LayerModel *layerModel = mMapDocument->layerModel();
@@ -264,7 +264,7 @@ QVariant MapObjectModel::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-QModelIndex MapObjectModel::index(Layer *layer) const
+QModelIndex MapObjectModel::index(TiledLayer *layer) const
 {
     Q_ASSERT(layer->isObjectGroup() || layer->isGroupLayer());
     const int row = filteredChildLayers(layer->parentLayer()).indexOf(layer);
@@ -277,14 +277,14 @@ QModelIndex MapObjectModel::index(MapObject *mapObject, int column) const
     return createIndex(row, column, mapObject);
 }
 
-Layer *MapObjectModel::toLayer(const QModelIndex &index) const
+TiledLayer *MapObjectModel::toLayer(const QModelIndex &index) const
 {
     if (!index.isValid())
         return nullptr;
 
     Object *object = static_cast<Object*>(index.internalPointer());
     if (object->typeId() == Object::LayerType)
-        return static_cast<Layer*>(object);
+        return static_cast<TiledLayer*>(object);
 
     return nullptr;
 }
@@ -303,14 +303,14 @@ MapObject *MapObjectModel::toMapObject(const QModelIndex &index) const
 
 ObjectGroup *MapObjectModel::toObjectGroup(const QModelIndex &index) const
 {
-    if (Layer *layer = toLayer(index))
+    if (TiledLayer *layer = toLayer(index))
         return layer->asObjectGroup();
     return nullptr;
 }
 
 GroupLayer *MapObjectModel::toGroupLayer(const QModelIndex &index) const
 {
-    if (Layer *layer = toLayer(index))
+    if (TiledLayer *layer = toLayer(index))
         return layer->asGroupLayer();
     return nullptr;
 }
@@ -322,7 +322,7 @@ ObjectGroup *MapObjectModel::toObjectGroupContext(const QModelIndex &index) cons
 
     Object *object = static_cast<Object*>(index.internalPointer());
     if (object->typeId() == Object::LayerType) {
-        if (auto objectGroup = static_cast<Layer*>(object)->asObjectGroup())
+        if (auto objectGroup = static_cast<TiledLayer*>(object)->asObjectGroup())
             return objectGroup;
     } else if (object->typeId() == Object::MapObjectType) {
         return static_cast<MapObject*>(object)->objectGroup();
@@ -361,12 +361,12 @@ void MapObjectModel::setMapDocument(MapDocument *mapDocument)
     endResetModel();
 }
 
-void MapObjectModel::layerAdded(Layer *layer)
+void MapObjectModel::layerAdded(TiledLayer *layer)
 {
     if (layer->isObjectGroup() || layer->isGroupLayer()) {
         const auto &siblings = layer->siblings();
 
-        Layer *prev = nullptr;
+        TiledLayer *prev = nullptr;
         for (int i = siblings.indexOf(layer) - 1; i >= 0; --i) {
             auto sibling = siblings.at(i);
             if (sibling->isObjectGroup() || sibling->isGroupLayer()) {
@@ -388,7 +388,7 @@ void MapObjectModel::layerAdded(Layer *layer)
     }
 }
 
-void MapObjectModel::layerChanged(Layer *layer)
+void MapObjectModel::layerChanged(TiledLayer *layer)
 {
     if (layer->isObjectGroup() || layer->isGroupLayer()) {
         QModelIndex index = this->index(layer);
@@ -399,7 +399,7 @@ void MapObjectModel::layerChanged(Layer *layer)
 void MapObjectModel::layerAboutToBeRemoved(GroupLayer *groupLayer, int index)
 {
     const auto &layers = groupLayer ? groupLayer->layers() : mMap->layers();
-    Layer *layer = layers.at(index);
+    TiledLayer *layer = layers.at(index);
 
     if (layer->isObjectGroup() || layer->isGroupLayer()) {
         auto &filtered = filteredChildLayers(groupLayer);
@@ -417,7 +417,7 @@ void MapObjectModel::tileTypeChanged(Tile *tile)
 {
     LayerIterator it(mMap);
 
-    while (Layer *layer = it.next()) {
+    while (TiledLayer *layer = it.next()) {
         if (ObjectGroup *objectGroup = layer->asObjectGroup()) {
             for (MapObject *mapObject : objectGroup->objects()) {
                 if (!mapObject->type().isEmpty())
@@ -451,12 +451,12 @@ void MapObjectModel::emitObjectsChanged(const QList<MapObject *> &objects, Colum
                        QList<MapObjectModel::Column>() << column);
 }
 
-QList<Layer *> &MapObjectModel::filteredChildLayers(GroupLayer *parentLayer) const
+QList<TiledLayer *> &MapObjectModel::filteredChildLayers(GroupLayer *parentLayer) const
 {
     if (!mFilteredLayers.contains(parentLayer)) {
-        QList<Layer*> &filtered = mFilteredLayers[parentLayer];
+        QList<TiledLayer*> &filtered = mFilteredLayers[parentLayer];
         const auto &layers = parentLayer ? parentLayer->layers() : mMap->layers();
-        for (Layer *layer : layers)
+        for (TiledLayer *layer : layers)
             if (layer->isObjectGroup() || layer->isGroupLayer())
                 filtered.append(layer);
         return filtered;

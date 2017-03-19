@@ -331,22 +331,22 @@ void LuaPlugin::writeTileset(LuaTableWriter &writer, const Tileset *tileset,
 }
 
 void LuaPlugin::writeLayers(LuaTableWriter &writer,
-                            const QList<Layer *> &layers,
+                            const QList<TiledLayer *> &layers,
                             Map::LayerDataFormat format)
 {
     writer.writeStartTable("layers");
-    for (const Layer *layer : layers) {
+    for (const TiledLayer *layer : layers) {
         switch (layer->layerType()) {
-        case Layer::TileLayerType:
+        case TiledLayer::TileLayerType:
             writeTileLayer(writer, static_cast<const TileLayer*>(layer), format);
             break;
-        case Layer::ObjectGroupType:
+        case TiledLayer::ObjectGroupType:
             writeObjectGroup(writer, static_cast<const ObjectGroup*>(layer));
             break;
-        case Layer::ImageLayerType:
-            writeImageLayer(writer, static_cast<const ImageLayer*>(layer));
+        case TiledLayer::ImageLayerType:
+            writeImageLayer(writer, static_cast<const TiledImageLayer*>(layer));
             break;
-        case Layer::GroupLayerType:
+        case TiledLayer::GroupLayerType:
             writeGroupLayer(writer, static_cast<const GroupLayer*>(layer), format);
             break;
         }
@@ -440,7 +440,7 @@ void LuaPlugin::writeObjectGroup(LuaTableWriter &writer,
 }
 
 void LuaPlugin::writeImageLayer(LuaTableWriter &writer,
-                                const ImageLayer *imageLayer)
+                                const TiledImageLayer *imageLayer)
 {
     writer.writeStartTable();
 

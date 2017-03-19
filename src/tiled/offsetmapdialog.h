@@ -29,7 +29,7 @@ class OffsetMapDialog;
 
 namespace Tiled {
 
-class Layer;
+class TiledLayer;
 
 namespace Internal {
 
@@ -44,7 +44,7 @@ public:
 
     ~OffsetMapDialog();
 
-    QList<Layer*> affectedLayers() const;
+    QList<TiledLayer*> affectedLayers() const;
     QRect affectedBoundingRect() const;
 
     QPoint offset() const;

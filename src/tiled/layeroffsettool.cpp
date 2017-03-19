@@ -70,7 +70,7 @@ void LayerOffsetTool::mouseMoved(const QPointF &pos, Qt::KeyboardModifiers modif
 
     // Take into account the offset of the current layer
     QPointF offsetPos = pos;
-    if (Layer *layer = currentLayer())
+    if (TiledLayer *layer = currentLayer())
         offsetPos -= layer->totalOffset();
 
     const QPointF tilePosF = mapDocument()->renderer()->screenToTileCoords(offsetPos);
@@ -136,7 +136,7 @@ void LayerOffsetTool::startDrag(const QPointF &pos)
     if (!mapDocument())
         return;
 
-    if (Layer *layer = mapDocument()->currentLayer()) {
+    if (TiledLayer *layer = mapDocument()->currentLayer()) {
         mDragging = true;
         mMouseSceneStart = pos;
         mOldOffset = layer->offset();
@@ -153,7 +153,7 @@ void LayerOffsetTool::finishDrag()
     if (!mapDocument())
         return;
 
-    if (Layer *layer = mapDocument()->currentLayer()) {
+    if (TiledLayer *layer = mapDocument()->currentLayer()) {
         const QPointF newOffset = layer->offset();
         auto currentLayer = mapDocument()->currentLayer();
         mApplyingChange = true;

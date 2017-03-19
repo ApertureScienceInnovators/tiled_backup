@@ -90,7 +90,7 @@ void ClipboardManager::setMap(const Map &map)
 
 void ClipboardManager::copySelection(const MapDocument *mapDocument)
 {
-    const Layer *currentLayer = mapDocument->currentLayer();
+    const TiledLayer *currentLayer = mapDocument->currentLayer();
     if (!currentLayer)
         return;
 
@@ -98,7 +98,7 @@ void ClipboardManager::copySelection(const MapDocument *mapDocument)
     const QRegion &selectedArea = mapDocument->selectedArea();
     const QList<MapObject*> &selectedObjects = mapDocument->selectedObjects();
     const TileLayer *tileLayer = dynamic_cast<const TileLayer*>(currentLayer);
-    Layer *copyLayer = nullptr;
+    TiledLayer *copyLayer = nullptr;
 
     if (!selectedArea.isEmpty() && tileLayer) {
         const QRegion area = selectedArea.intersected(tileLayer->bounds());
@@ -138,7 +138,7 @@ void ClipboardManager::pasteObjectGroup(const ObjectGroup *objectGroup,
                                         const MapView *view,
                                         PasteFlags flags)
 {
-    Layer *currentLayer = mapDocument->currentLayer();
+    TiledLayer *currentLayer = mapDocument->currentLayer();
     if (!currentLayer)
         return;
 

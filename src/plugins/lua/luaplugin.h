@@ -63,13 +63,13 @@ private:
     void writeProperties(LuaTableWriter &, const Tiled::Properties &);
     void writeTileset(LuaTableWriter &, const Tiled::Tileset *, unsigned firstGid);
     void writeLayers(LuaTableWriter &,
-                     const QList<Tiled::Layer*> &layers,
+                     const QList<Tiled::TiledLayer*> &layers,
                      Tiled::Map::LayerDataFormat format);
     void writeTileLayer(LuaTableWriter &, const Tiled::TileLayer *,
                         Tiled::Map::LayerDataFormat);
     void writeObjectGroup(LuaTableWriter &, const Tiled::ObjectGroup *,
                           const QByteArray &key = QByteArray());
-    void writeImageLayer(LuaTableWriter &, const Tiled::ImageLayer *);
+    void writeImageLayer(LuaTableWriter &, const Tiled::TiledImageLayer *);
     void writeGroupLayer(LuaTableWriter &, const Tiled::GroupLayer *,
                          Tiled::Map::LayerDataFormat);
     void writeMapObject(LuaTableWriter &, const Tiled::MapObject *);

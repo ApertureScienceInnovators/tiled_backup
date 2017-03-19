@@ -112,10 +112,10 @@ bool GmxPlugin::write(const Map *map, const QString &fileName)
 
     // Write out object instances
     LayerIterator iterator(map);
-    while (const Layer *layer = iterator.next()) {
+    while (const TiledLayer *layer = iterator.next()) {
         ++layerCount;
 
-        if (layer->layerType() != Layer::ObjectGroupType)
+        if (layer->layerType() != TiledLayer::ObjectGroupType)
             continue;
 
         const ObjectGroup *objectLayer = static_cast<const ObjectGroup*>(layer);
@@ -193,11 +193,11 @@ bool GmxPlugin::write(const Map *map, const QString &fileName)
 
     // Write out tile instances
     iterator.toFront();
-    while (const Layer *layer = iterator.next()) {
+    while (const TiledLayer *layer = iterator.next()) {
         QString depth = QString::number(optionalProperty(layer, QLatin1String("depth"), layerCount));
 
         switch (layer->layerType()) {
-        case Layer::TileLayerType: {
+        case TiledLayer::TileLayerType: {
             auto tileLayer = static_cast<const TileLayer*>(layer);
             for (int y = 0; y < tileLayer->height(); ++y) {
                 for (int x = 0; x < tileLayer->width(); ++x) {
@@ -259,7 +259,7 @@ bool GmxPlugin::write(const Map *map, const QString &fileName)
             break;
         }
 
-        case Layer::ObjectGroupType: {
+        case TiledLayer::ObjectGroupType: {
             auto objectGroup = static_cast<const ObjectGroup*>(layer);
             auto objects = objectGroup->objects();
 
@@ -333,11 +333,11 @@ bool GmxPlugin::write(const Map *map, const QString &fileName)
             break;
         }
 
-        case Layer::ImageLayerType:
+        case TiledLayer::ImageLayerType:
             // todo: maybe export as backgrounds?
             break;
 
-        case Layer::GroupLayerType:
+        case TiledLayer::GroupLayerType:
             // Recursion handled by LayerIterator
             break;
         }

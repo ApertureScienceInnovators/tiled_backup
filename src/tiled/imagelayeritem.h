@@ -42,9 +42,9 @@ public:
      * @param layer       the image layer to be displayed
      * @param mapDocument the map document owning the map of this layer
      */
-    ImageLayerItem(ImageLayer *layer, MapDocument *mapDocument, QGraphicsItem *parent = nullptr);
+    ImageLayerItem(TiledImageLayer *layer, MapDocument *mapDocument, QGraphicsItem *parent = nullptr);
 
-    ImageLayer *imageLayer() const;
+    TiledImageLayer *imageLayer() const;
 
     /**
      * Updates the size and position of this item. Should be called when the
@@ -67,9 +67,9 @@ private:
     QRectF mBoundingRect;
 };
 
-inline ImageLayer *ImageLayerItem::imageLayer() const
+inline TiledImageLayer *ImageLayerItem::imageLayer() const
 {
-    return static_cast<ImageLayer*>(layer());
+    return static_cast<TiledImageLayer*>(layer());
 }
 
 } // namespace Internal

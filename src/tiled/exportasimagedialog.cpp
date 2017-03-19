@@ -218,7 +218,7 @@ void ExportAsImageDialog::accept()
     painter.translate(margins.left(), margins.top());
 
     LayerIterator iterator(mMapDocument->map());
-    while (Layer *layer = iterator.next()) {
+    while (TiledLayer *layer = iterator.next()) {
         if (visibleLayersOnly && layer->isHidden())
             continue;
 
@@ -228,13 +228,13 @@ void ExportAsImageDialog::accept()
         painter.translate(offset);
 
         switch (layer->layerType()) {
-        case Layer::TileLayerType: {
+        case TiledLayer::TileLayerType: {
             const TileLayer *tileLayer = static_cast<const TileLayer*>(layer);
             renderer->drawTileLayer(&painter, tileLayer);
             break;
         }
 
-        case Layer::ObjectGroupType: {
+        case TiledLayer::ObjectGroupType: {
             const ObjectGroup *objectGroup = static_cast<const ObjectGroup*>(layer);
             QList<MapObject*> objects = objectGroup->objects();
 
@@ -260,13 +260,13 @@ void ExportAsImageDialog::accept()
             }
             break;
         }
-        case Layer::ImageLayerType: {
-            const ImageLayer *imageLayer = static_cast<const ImageLayer*>(layer);
+        case TiledLayer::ImageLayerType: {
+            const TiledImageLayer *imageLayer = static_cast<const TiledImageLayer*>(layer);
             renderer->drawImageLayer(&painter, imageLayer);
             break;
         }
 
-        case Layer::GroupLayerType:
+        case TiledLayer::GroupLayerType:
             // Recursion handled by LayerIterator
             break;
         }

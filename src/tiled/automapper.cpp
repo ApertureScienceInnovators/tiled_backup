@@ -131,7 +131,7 @@ bool AutoMapper::setupRuleMapTileLayers()
 
     QString error;
 
-    foreach (Layer *layer, mMapRules->layers()) {
+    foreach (TiledLayer *layer, mMapRules->layers()) {
         const QString layerName = layer->name();
 
         if (layerName.startsWith(QLatin1String("regions"),
@@ -226,7 +226,7 @@ bool AutoMapper::setupRuleMapTileLayers()
             else
                 mTouchedObjectGroups.insert(name);
 
-            Layer::TypeFlag type = layer->layerType();
+            TiledLayer::TypeFlag type = layer->layerType();
             int layerIndex = mMapWork->indexOfLayer(name, type);
 
             bool found = false;
@@ -343,7 +343,7 @@ bool AutoMapper::setupMissingLayers()
 {
     // make sure all needed layers are there:
     foreach (const QString &name, mTouchedTileLayers) {
-        if (mMapWork->indexOfLayer(name, Layer::TileLayerType) != -1)
+        if (mMapWork->indexOfLayer(name, TiledLayer::TileLayerType) != -1)
             continue;
 
         const int index =  mMapWork->layerCount();
@@ -356,7 +356,7 @@ bool AutoMapper::setupMissingLayers()
     }
 
     foreach (const QString &name, mTouchedObjectGroups) {
-        if (mMapWork->indexOfLayer(name, Layer::ObjectGroupType) != -1)
+        if (mMapWork->indexOfLayer(name, TiledLayer::ObjectGroupType) != -1)
             continue;
 
         const int index =  mMapWork->layerCount();
@@ -373,7 +373,7 @@ bool AutoMapper::setupCorrectIndexes()
 {
     // make sure all indexes of the layer translationtables are correct.
     for (RuleOutput *translationTable : mLayerList) {
-        foreach (Layer *layerKey, translationTable->keys()) {
+        foreach (TiledLayer *layerKey, translationTable->keys()) {
             QString name = layerKey->name();
             const int pos = name.indexOf(QLatin1Char('_')) + 1;
             name = name.right(name.length() - pos);
@@ -452,9 +452,9 @@ void AutoMapper::autoMap(QRegion *where)
     if (mDeleteTiles) {
         const QRegion setLayersRegion = getSetLayersRegion();
         for (RuleOutput *translationTable : mLayerList) {
-            foreach (Layer *layer, translationTable->keys()) {
+            foreach (TiledLayer *layer, translationTable->keys()) {
                 const int index = translationTable->value(layer);
-                Layer *dstLayer = mMapWork->layerAt(index);
+                TiledLayer *dstLayer = mMapWork->layerAt(index);
                 const QRegion region = setLayersRegion.intersected(*where);
                 TileLayer *dstTileLayer = dstLayer->asTileLayer();
                 if (dstTileLayer)
@@ -485,7 +485,7 @@ const QRegion AutoMapper::getSetLayersRegion()
 {
     QRegion result;
     foreach (const QString &name, mInputRules.names) {
-        const int index = mMapWork->indexOfLayer(name, Layer::TileLayerType);
+        const int index = mMapWork->indexOfLayer(name, TiledLayer::TileLayerType);
         if (index == -1)
             continue;
         TileLayer *setLayer = mMapWork->layerAt(index)->asTileLayer();
@@ -535,7 +535,7 @@ QRect AutoMapper::applyRule(const int ruleIndex, const QRect &where)
 
             bool allLayerNamesMatch = true;
             foreach (const QString &name, ii.names) {
-                const int i = mMapWork->indexOfLayer(name, Layer::TileLayerType);
+                const int i = mMapWork->indexOfLayer(name, TiledLayer::TileLayerType);
                 if (i == -1) {
                     allLayerNamesMatch = false;
                 } else {
@@ -565,12 +565,12 @@ QRect AutoMapper::applyRule(const int ruleIndex, const QRect &where)
             }
 
             bool missmatch = false;
-            QList<Layer*> layers = translationTable->keys();
+            QList<TiledLayer*> layers = translationTable->keys();
 
             // check if there are no overlaps within this rule.
             QVector<QRegion> ruleRegionInLayer;
             for (int i = 0; i < layers.size(); ++i) {
-                Layer *layer = layers.at(i);
+                TiledLayer *layer = layers.at(i);
 
                 QRegion appliedPlace;
                 TileLayer *tileLayer = layer->asTileLayer();
@@ -779,8 +779,8 @@ void AutoMapper::copyMapRegion(const QRegion &region, QPoint offset,
                                const RuleOutput *layerTranslation)
 {
     for (auto it = layerTranslation->begin(), end = layerTranslation->end(); it != end; ++it) {
-        Layer *from = it.key();
-        Layer *to = mMapWork->layerAt(layerTranslation->value(from));
+        TiledLayer *from = it.key();
+        TiledLayer *to = mMapWork->layerAt(layerTranslation->value(from));
         foreach (const QRect &rect, region.rects()) {
             if (TileLayer *fromTileLayer = from->asTileLayer()) {
                 TileLayer *toTileLayer = to->asTileLayer();
@@ -874,11 +874,11 @@ void AutoMapper::cleanTileLayers()
 {
     foreach (const QString &tilelayerName, mAddedTileLayers) {
         const int layerIndex = mMapWork->indexOfLayer(tilelayerName,
-                                                      Layer::TileLayerType);
+                                                      TiledLayer::TileLayerType);
         if (layerIndex == -1)
             continue;
 
-        const Layer *layer = mMapWork->layerAt(layerIndex);
+        const TiledLayer *layer = mMapWork->layerAt(layerIndex);
         if (!layer->isEmpty())
             continue;
 

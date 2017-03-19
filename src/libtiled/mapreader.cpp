@@ -33,7 +33,7 @@
 #include "compression.h"
 #include "gidmapper.h"
 #include "grouplayer.h"
-#include "imagelayer.h"
+#include "tiled_imagelayer.h"
 #include "objectgroup.h"
 #include "map.h"
 #include "mapobject.h"
@@ -86,7 +86,7 @@ private:
     void readTilesetTerrainTypes(Tileset &tileset);
     ImageReference readImage();
 
-    Layer *tryReadLayer();
+    TiledLayer *tryReadLayer();
 
     TileLayer *readTileLayer();
     void readTileLayerData(TileLayer &tileLayer);
@@ -105,8 +105,8 @@ private:
      */
     Cell cellForGid(unsigned gid);
 
-    ImageLayer *readImageLayer();
-    void readImageLayerImage(ImageLayer &imageLayer);
+    TiledImageLayer *readImageLayer();
+    void readImageLayerImage(TiledImageLayer &imageLayer);
 
     ObjectGroup *readObjectGroup();
     MapObject *readObject();
@@ -255,7 +255,7 @@ Map *MapReaderPrivate::readMap()
         mMap->setBackgroundColor(QColor(bgColorString.toString()));
 
     while (xml.readNextStartElement()) {
-        if (Layer *layer = tryReadLayer())
+        if (TiledLayer *layer = tryReadLayer())
             mMap->addLayer(layer);
         else if (xml.name() == QLatin1String("properties"))
             mMap->mergeProperties(readProperties());
@@ -278,7 +278,7 @@ Map *MapReaderPrivate::readMap()
 
         // Fix up sizes of tile objects
         LayerIterator iterator(mMap.data());
-        while (Layer *layer = iterator.next()) {
+        while (TiledLayer *layer = iterator.next()) {
             if (ObjectGroup *objectGroup = layer->asObjectGroup()) {
                 for (MapObject *object : *objectGroup) {
                     if (const Tile *tile = object->cell().tile()) {
@@ -524,7 +524,7 @@ ImageReference MapReaderPrivate::readImage()
     return image;
 }
 
-Layer *MapReaderPrivate::tryReadLayer()
+TiledLayer *MapReaderPrivate::tryReadLayer()
 {
     Q_ASSERT(xml.isStartElement());
 
@@ -564,7 +564,7 @@ void MapReaderPrivate::readTilesetTerrainTypes(Tileset &tileset)
     }
 }
 
-static void readLayerAttributes(Layer &layer,
+static void readLayerAttributes(TiledLayer &layer,
                                 const QXmlStreamAttributes &atts)
 {
     const QStringRef opacityRef = atts.value(QLatin1String("opacity"));
@@ -784,7 +784,7 @@ ObjectGroup *MapReaderPrivate::readObjectGroup()
     return objectGroup;
 }
 
-ImageLayer *MapReaderPrivate::readImageLayer()
+TiledImageLayer *MapReaderPrivate::readImageLayer()
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == QLatin1String("imagelayer"));
 
@@ -793,7 +793,7 @@ ImageLayer *MapReaderPrivate::readImageLayer()
     const int x = atts.value(QLatin1String("x")).toInt();
     const int y = atts.value(QLatin1String("y")).toInt();
 
-    ImageLayer *imageLayer = new ImageLayer(name, x, y);
+    TiledImageLayer *imageLayer = new TiledImageLayer(name, x, y);
     readLayerAttributes(*imageLayer, atts);
 
     // Image layer pixel position moved from x/y to offsetx/offsety for
@@ -813,7 +813,7 @@ ImageLayer *MapReaderPrivate::readImageLayer()
     return imageLayer;
 }
 
-void MapReaderPrivate::readImageLayerImage(ImageLayer &imageLayer)
+void MapReaderPrivate::readImageLayerImage(TiledImageLayer &imageLayer)
 {
     Q_ASSERT(xml.isStartElement() && xml.name() == QLatin1String("image"));
 
@@ -997,7 +997,7 @@ GroupLayer *MapReaderPrivate::readGroupLayer()
     readLayerAttributes(*groupLayer, atts);
 
     while (xml.readNextStartElement()) {
-        if (Layer *layer = tryReadLayer())
+        if (TiledLayer *layer = tryReadLayer())
             groupLayer->addLayer(layer);
         else if (xml.name() == QLatin1String("properties"))
             groupLayer->mergeProperties(readProperties());

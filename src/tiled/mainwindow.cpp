@@ -1446,7 +1446,7 @@ void MainWindow::updateActions()
     QRegion selection;
 
     if (mapDocument) {
-        Layer *currentLayer = mapDocument->currentLayer();
+        TiledLayer *currentLayer = mapDocument->currentLayer();
 
         tileLayerSelected = dynamic_cast<TileLayer*>(currentLayer) != nullptr;
         objectsSelected = !mapDocument->selectedObjects().isEmpty();

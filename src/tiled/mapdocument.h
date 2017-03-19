@@ -105,14 +105,14 @@ public:
      */
     Map *map() const { return mMap; }
 
-    int layerIndex(const Layer *layer) const;
+    int layerIndex(const TiledLayer *layer) const;
 
     /**
      * Returns the currently selected layer, or 0 if no layer is currently
      * selected.
      */
-    Layer *currentLayer() const { return mCurrentLayer; }
-    void setCurrentLayer(Layer *layer);
+    TiledLayer *currentLayer() const { return mCurrentLayer; }
+    void setCurrentLayer(TiledLayer *layer);
 
     /**
      * Resize this map to the given \a size, while at the same time shifting
@@ -125,7 +125,7 @@ public:
      * Offsets the \a layers by \a offset, within \a bounds, and optionally
      * wraps on the X or Y axis.
      */
-    void offsetMap(const QList<Layer *> &layers,
+    void offsetMap(const QList<TiledLayer *> &layers,
                    const QPoint &offset,
                    const QRect &bounds,
                    bool wrapX, bool wrapY);
@@ -133,15 +133,15 @@ public:
     void flipSelectedObjects(FlipDirection direction);
     void rotateSelectedObjects(RotateDirection direction);
 
-    Layer *addLayer(Layer::TypeFlag layerType);
-    void groupLayer(Layer *layer);
-    void ungroupLayer(Layer *layer);
+    TiledLayer *addLayer(TiledLayer::TypeFlag layerType);
+    void groupLayer(TiledLayer *layer);
+    void ungroupLayer(TiledLayer *layer);
     void duplicateLayer();
     void mergeLayerDown();
-    void moveLayerUp(Layer *layer);
-    void moveLayerDown(Layer *layer);
-    void removeLayer(Layer *layer);
-    void toggleOtherLayers(Layer *layer);
+    void moveLayerUp(TiledLayer *layer);
+    void moveLayerDown(TiledLayer *layer);
+    void removeLayer(TiledLayer *layer);
+    void toggleOtherLayers(TiledLayer *layer);
 
     void insertTileset(int index, const SharedTileset &tileset);
     void removeTilesetAt(int index);
@@ -222,10 +222,10 @@ signals:
      */
     void mapChanged();
 
-    void layerAdded(Layer *layer);
+    void layerAdded(TiledLayer *layer);
     void layerAboutToBeRemoved(GroupLayer *parentLayer, int index);
-    void layerRemoved(Layer *layer);
-    void layerChanged(Layer *layer);
+    void layerRemoved(TiledLayer *layer);
+    void layerChanged(TiledLayer *layer);
 
     /**
      * Emitted after a new layer was added and the name should be edited.
@@ -236,20 +236,20 @@ signals:
     /**
      * Emitted when the current layer changes.
      */
-    void currentLayerChanged(Layer *layer);
+    void currentLayerChanged(TiledLayer *layer);
 
     /**
      * Emitted when a certain region of the map changes. The region is given in
      * tile coordinates.
      */
-    void regionChanged(const QRegion &region, Layer *layer);
+    void regionChanged(const QRegion &region, TiledLayer *layer);
 
     /**
      * Emitted when a certain region of the map was edited by user input.
      * The region is given in tile coordinates.
      * If multiple layers have been edited, multiple signals will be emitted.
      */
-    void regionEdited(const QRegion &region, Layer *layer);
+    void regionEdited(const QRegion &region, TiledLayer *layer);
 
     void tileLayerDrawMarginsChanged(TileLayer *layer);
 
@@ -263,7 +263,7 @@ signals:
      * Should be emitted when changing the image or the transparent color of
      * an image layer.
      */
-    void imageLayerChanged(ImageLayer *imageLayer);
+    void imageLayerChanged(TiledImageLayer *imageLayer);
 
     void tilesetAboutToBeAdded(int index);
     void tilesetAdded(int index, Tileset *tileset);
@@ -296,9 +296,9 @@ private slots:
     void onObjectsMoved(const QModelIndex &parent, int start, int end,
                         const QModelIndex &destination, int row);
 
-    void onLayerAdded(Layer *layer);
+    void onLayerAdded(TiledLayer *layer);
     void onLayerAboutToBeRemoved(GroupLayer *groupLayer, int index);
-    void onLayerRemoved(Layer *layer);
+    void onLayerRemoved(TiledLayer *layer);
 
 private:
     void deselectObjects(const QList<MapObject*> &objects);
@@ -318,7 +318,7 @@ private:
     QRegion mSelectedArea;
     QList<MapObject*> mSelectedObjects;
     MapRenderer *mRenderer;
-    Layer* mCurrentLayer;
+    TiledLayer* mCurrentLayer;
     MapObjectModel *mMapObjectModel;
     TerrainModel *mTerrainModel;
 };

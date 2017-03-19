@@ -1,5 +1,5 @@
 /*
- * layer.h
+ * tiled_layer.h
  * Copyright 2008-2010, Thorbjørn Lindeijer <thorbjorn@lindeijer.nl>
  * Copyright 2009, Jeff Bland <jeff@teamphobic.com>
  *
@@ -42,14 +42,14 @@ namespace Tiled {
 
 class GroupLayer;
 class Map;
-class ImageLayer;
+class TiledImageLayer;
 class ObjectGroup;
 class TileLayer;
 
 /**
  * A map layer.
  */
-class TILEDSHARED_EXPORT Layer : public Object
+class TILEDSHARED_EXPORT TiledLayer : public Object
 {
 public:
     enum TypeFlag {
@@ -64,7 +64,7 @@ public:
     /**
      * Constructor.
      */
-    Layer(TypeFlag type, const QString &name, int x, int y);
+    TiledLayer(TypeFlag type, const QString &name, int x, int y);
 
     /**
      * Returns the type of this layer.
@@ -115,10 +115,10 @@ public:
      */
     GroupLayer *parentLayer() const { return mParentLayer; }
 
-    bool isParentOrSelf(const Layer *candidate) const;
+    bool isParentOrSelf(const TiledLayer *candidate) const;
     int depth() const;
     int siblingIndex() const;
-    QList<Layer*> siblings() const;
+    QList<TiledLayer*> siblings() const;
 
     /**
      * Returns the x position of this layer (in tiles).
@@ -178,7 +178,7 @@ public:
     /**
      * Returns whether this layer can merge together with the \a other layer.
      */
-    virtual bool canMergeWith(Layer *other) const = 0;
+    virtual bool canMergeWith(TiledLayer *other) const = 0;
 
     /**
      * Returns a newly allocated layer that is the result of merging this layer
@@ -187,13 +187,13 @@ public:
      *
      * Should only be called when canMergeWith returns true.
      */
-    virtual Layer *mergedWith(Layer *other) const = 0;
+    virtual TiledLayer *mergedWith(TiledLayer *other) const = 0;
 
     /**
      * Returns a duplicate of this layer. The caller is responsible for the
      * ownership of this newly created layer.
      */
-    virtual Layer *clone() const = 0;
+    virtual TiledLayer *clone() const = 0;
 
     // These functions allow checking whether this Layer is an instance of the
     // given subclass without relying on a dynamic_cast.
@@ -205,7 +205,7 @@ public:
     // These actually return this layer cast to one of its subclasses.
     TileLayer *asTileLayer();
     ObjectGroup *asObjectGroup();
-    ImageLayer *asImageLayer();
+    TiledImageLayer *asImageLayer();
     GroupLayer *asGroupLayer();
 
 protected:
@@ -216,7 +216,7 @@ protected:
     virtual void setMap(Map *map) { mMap = map; }
     void setParentLayer(GroupLayer *groupLayer) { mParentLayer = groupLayer; }
 
-    Layer *initializeClone(Layer *clone) const;
+    TiledLayer *initializeClone(TiledLayer *clone) const;
 
     QString mName;
     TypeFlag mLayerType;
@@ -236,7 +236,7 @@ protected:
 /**
  * Sets the drawing offset in pixels of this layer.
  */
-inline void Layer::setOffset(const QPointF &offset)
+inline void TiledLayer::setOffset(const QPointF &offset)
 {
     mOffset = offset;
 }
@@ -244,7 +244,7 @@ inline void Layer::setOffset(const QPointF &offset)
 /**
  * Returns the drawing offset in pixels of this layer.
  */
-inline QPointF Layer::offset() const
+inline QPointF TiledLayer::offset() const
 {
     return mOffset;
 }
@@ -261,24 +261,24 @@ class TILEDSHARED_EXPORT LayerIterator
 {
 public:
     LayerIterator(const Map *map);
-    LayerIterator(Layer *start);
+    LayerIterator(TiledLayer *start);
 
-    Layer *currentLayer() const;
+    TiledLayer *currentLayer() const;
     int currentSiblingIndex() const;
 
     bool hasNextSibling() const;
     bool hasPreviousSibling() const;
     bool hasParent() const;
 
-    Layer *next();
-    Layer *previous();
+    TiledLayer *next();
+    TiledLayer *previous();
 
     void toFront();
     void toBack();
 
 private:
     const Map *mMap;
-    Layer *mCurrentLayer;
+    TiledLayer *mCurrentLayer;
     int mSiblingIndex;
 };
 
@@ -295,13 +295,13 @@ inline LayerIterator::LayerIterator(const Map *map)
 /**
  * Iterate the layer's map, starting at the given \a layer.
  */
-inline LayerIterator::LayerIterator(Layer *start)
+inline LayerIterator::LayerIterator(TiledLayer *start)
     : mMap(start ? start->map() : nullptr)
     , mCurrentLayer(start)
     , mSiblingIndex(start ? start->siblingIndex() : -1)
 {}
 
-inline Layer *LayerIterator::currentLayer() const
+inline TiledLayer *LayerIterator::currentLayer() const
 {
     return mCurrentLayer;
 }
@@ -330,7 +330,7 @@ inline bool LayerIterator::hasParent() const
 }
 
 
-TILEDSHARED_EXPORT int globalIndex(Layer *layer);
-TILEDSHARED_EXPORT Layer *layerAtGlobalIndex(const Map *map, int index);
+TILEDSHARED_EXPORT int globalIndex(TiledLayer *layer);
+TILEDSHARED_EXPORT TiledLayer *layerAtGlobalIndex(const Map *map, int index);
 
 } // namespace Tiled

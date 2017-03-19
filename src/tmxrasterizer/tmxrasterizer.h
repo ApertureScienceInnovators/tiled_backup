@@ -68,6 +68,6 @@ private:
     bool mIgnoreVisibility;
     QStringList mLayersToHide;
 
-    bool shouldDrawLayer(const Layer *layer);
+    bool shouldDrawLayer(const TiledLayer *layer);
 
 };

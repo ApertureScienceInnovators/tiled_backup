@@ -279,7 +279,7 @@ extern PyTypeObject PyTiledTileset_Type;
 
 typedef struct {
     PyObject_HEAD
-    Tiled::Layer *obj;
+    Tiled::TiledLayer *obj;
     PyBindGenWrapperFlags flags:8;
 } PyTiledLayer;
 
@@ -319,7 +319,7 @@ extern PyTypeObject PyTiledTileLayer_Type;
 
 typedef struct {
     PyObject_HEAD
-    Tiled::ImageLayer *obj;
+    Tiled::TiledImageLayer *obj;
     PyBindGenWrapperFlags flags:8;
 } PyTiledImageLayer;
 
@@ -2397,7 +2397,7 @@ PyTypeObject PyQList__lt__QString__gt__Iter_Type = {
 
 
 bool isImageLayerAt(Tiled::Map *map, int idx) {
-    return (dynamic_cast<const Tiled::ImageLayer*>(map->layerAt(idx)) != 0);
+    return (dynamic_cast<const Tiled::TiledImageLayer*>(map->layerAt(idx)) != 0);
 }
 bool isTileLayerAt(Tiled::Map *map, int idx) {
     return (dynamic_cast<const Tiled::TileLayer*>(map->layerAt(idx)) != 0);
@@ -2405,8 +2405,8 @@ bool isTileLayerAt(Tiled::Map *map, int idx) {
 bool isObjectGroupAt(Tiled::Map *map, int idx) {
     return (dynamic_cast<const Tiled::ObjectGroup*>(map->layerAt(idx)) != 0);
 }
-Tiled::ImageLayer* imageLayerAt(Tiled::Map *map, int idx) {
-    return static_cast<Tiled::ImageLayer*>(map->layerAt(idx));
+Tiled::TiledImageLayer* imageLayerAt(Tiled::Map *map, int idx) {
+    return static_cast<Tiled::TiledImageLayer*>(map->layerAt(idx));
 }
 Tiled::TileLayer* tileLayerAt(Tiled::Map *map, int idx) {
     return static_cast<Tiled::TileLayer*>(map->layerAt(idx));
@@ -3867,7 +3867,7 @@ static PyMethodDef PyTiledLayer_methods[] = {
 static void
 _wrap_PyTiledLayer__tp_dealloc(PyTiledLayer *self)
 {
-        Tiled::Layer *tmp = self->obj;
+        Tiled::TiledLayer *tmp = self->obj;
         self->obj = NULL;
         if (!(self->flags&PYBINDGEN_WRAPPER_FLAG_OBJECT_NOT_OWNED)) {
             delete tmp;
@@ -4088,7 +4088,7 @@ PyObject *
 _wrap_PyTiledMap_layerAt(PyTiledMap *self, PyObject *args, PyObject *kwargs)
 {
     PyObject *py_retval;
-    Tiled::Layer *retval;
+    Tiled::TiledLayer *retval;
     int idx;
     const char *keywords[] = {"idx", NULL};
     PyTiledLayer *py_Layer;
@@ -4286,7 +4286,7 @@ _wrap_PyTiledMap_addLayer__0(PyTiledMap *self, PyObject *args, PyObject *kwargs,
 {
     PyObject *py_retval;
     PyTiledImageLayer *l;
-    Tiled::ImageLayer *l_ptr;
+    Tiled::TiledImageLayer *l_ptr;
     const char *keywords[] = {"l", NULL};
 
     if (!PyArg_ParseTupleAndKeywords(args, kwargs, (char *) "O!", (char **) keywords, &PyTiledImageLayer_Type, &l)) {
@@ -4974,7 +4974,7 @@ _wrap_PyTiledImageLayer__tp_init(PyTiledImageLayer *self, PyObject *args, PyObje
     if (!PyArg_ParseTupleAndKeywords(args, kwargs, (char *) "s#ii", (char **) keywords, &name, &name_len, &x, &y)) {
         return -1;
     }
-    self->obj = new Tiled::ImageLayer(QString::fromUtf8(name), x, y);
+    self->obj = new Tiled::TiledImageLayer(QString::fromUtf8(name), x, y);
     self->flags = PYBINDGEN_WRAPPER_FLAG_NONE;
     return 0;
 }
@@ -5040,7 +5040,7 @@ static PyMethodDef PyTiledImageLayer_methods[] = {
 static void
 _wrap_PyTiledImageLayer__tp_dealloc(PyTiledImageLayer *self)
 {
-        Tiled::ImageLayer *tmp = self->obj;
+        Tiled::TiledImageLayer *tmp = self->obj;
         self->obj = NULL;
         if (!(self->flags&PYBINDGEN_WRAPPER_FLAG_OBJECT_NOT_OWNED)) {
             delete tmp;

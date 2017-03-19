@@ -30,7 +30,7 @@
 
 #include "objectgroup.h"
 
-#include "layer.h"
+#include "tiled_layer.h"
 #include "map.h"
 #include "mapobject.h"
 #include "tile.h"
@@ -40,13 +40,13 @@
 using namespace Tiled;
 
 ObjectGroup::ObjectGroup()
-    : Layer(ObjectGroupType, QString(), 0, 0)
+    : TiledLayer(ObjectGroupType, QString(), 0, 0)
     , mDrawOrder(TopDownOrder)
 {
 }
 
 ObjectGroup::ObjectGroup(const QString &name, int x, int y)
-    : Layer(ObjectGroupType, name, x, y)
+    : TiledLayer(ObjectGroupType, name, x, y)
     , mDrawOrder(TopDownOrder)
 {
 }
@@ -181,12 +181,12 @@ void ObjectGroup::offsetObjects(const QPointF &offset,
     }
 }
 
-bool ObjectGroup::canMergeWith(Layer *other) const
+bool ObjectGroup::canMergeWith(TiledLayer *other) const
 {
     return other->isObjectGroup();
 }
 
-Layer *ObjectGroup::mergedWith(Layer *other) const
+TiledLayer *ObjectGroup::mergedWith(TiledLayer *other) const
 {
     Q_ASSERT(canMergeWith(other));
 
@@ -203,7 +203,7 @@ Layer *ObjectGroup::mergedWith(Layer *other) const
  *
  * \sa Layer::clone()
  */
-Layer *ObjectGroup::clone() const
+TiledLayer *ObjectGroup::clone() const
 {
     return initializeClone(new ObjectGroup(mName, mX, mY));
 }
@@ -233,7 +233,7 @@ int ObjectGroup::highestObjectId() const
 
 ObjectGroup *ObjectGroup::initializeClone(ObjectGroup *clone) const
 {
-    Layer::initializeClone(clone);
+    TiledLayer::initializeClone(clone);
     for (const MapObject *object : mObjects)
         clone->addObject(object->clone());
     clone->setColor(mColor);

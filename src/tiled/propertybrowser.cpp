@@ -161,8 +161,8 @@ void PropertyBrowser::setDocument(Document *document)
                 this, &PropertyBrowser::layerChanged);
         connect(mapDocument, SIGNAL(objectGroupChanged(ObjectGroup*)),
                 SLOT(objectGroupChanged(ObjectGroup*)));
-        connect(mapDocument, SIGNAL(imageLayerChanged(ImageLayer*)),
-                SLOT(imageLayerChanged(ImageLayer*)));
+        connect(mapDocument, SIGNAL(imageLayerChanged(TiledImageLayer*)),
+                SLOT(imageLayerChanged(TiledImageLayer*)));
         connect(mapDocument, &MapDocument::tileTypeChanged,
                 this, &PropertyBrowser::tileTypeChanged);
 
@@ -250,7 +250,7 @@ void PropertyBrowser::objectsTypeChanged(const QList<MapObject *> &objects)
             updateCustomProperties();
 }
 
-void PropertyBrowser::layerChanged(Layer *layer)
+void PropertyBrowser::layerChanged(TiledLayer *layer)
 {
     if (mObject == layer)
         updateProperties();
@@ -262,7 +262,7 @@ void PropertyBrowser::objectGroupChanged(ObjectGroup *objectGroup)
         updateProperties();
 }
 
-void PropertyBrowser::imageLayerChanged(ImageLayer *imageLayer)
+void PropertyBrowser::imageLayerChanged(TiledImageLayer *imageLayer)
 {
     if (mObject == imageLayer)
         updateProperties();
@@ -986,7 +986,7 @@ void PropertyBrowser::applyMapObjectValue(PropertyId id, const QVariant &val)
 
 void PropertyBrowser::applyLayerValue(PropertyId id, const QVariant &val)
 {
-    Layer *layer = static_cast<Layer*>(mObject);
+    TiledLayer *layer = static_cast<TiledLayer*>(mObject);
     QUndoCommand *command = nullptr;
 
     switch (id) {
@@ -1012,10 +1012,10 @@ void PropertyBrowser::applyLayerValue(PropertyId id, const QVariant &val)
     }
     default:
         switch (layer->layerType()) {
-        case Layer::TileLayerType:   applyTileLayerValue(id, val);   break;
-        case Layer::ObjectGroupType: applyObjectGroupValue(id, val); break;
-        case Layer::ImageLayerType:  applyImageLayerValue(id, val);  break;
-        case Layer::GroupLayerType:  applyGroupLayerValue(id, val);  break;
+        case TiledLayer::TileLayerType:   applyTileLayerValue(id, val);   break;
+        case TiledLayer::ObjectGroupType: applyObjectGroupValue(id, val); break;
+        case TiledLayer::ImageLayerType:  applyImageLayerValue(id, val);  break;
+        case TiledLayer::GroupLayerType:  applyGroupLayerValue(id, val);  break;
         }
         break;
     }
@@ -1062,7 +1062,7 @@ void PropertyBrowser::applyObjectGroupValue(PropertyId id, const QVariant &val)
 
 void PropertyBrowser::applyImageLayerValue(PropertyId id, const QVariant &val)
 {
-    ImageLayer *imageLayer = static_cast<ImageLayer*>(mObject);
+    TiledImageLayer *imageLayer = static_cast<TiledImageLayer*>(mObject);
     QUndoStack *undoStack = mDocument->undoStack();
 
     switch (id) {
@@ -1265,11 +1265,11 @@ void PropertyBrowser::addProperties()
     case Object::MapType:               addMapProperties(); break;
     case Object::MapObjectType:         addMapObjectProperties(); break;
     case Object::LayerType:
-        switch (static_cast<Layer*>(mObject)->layerType()) {
-        case Layer::TileLayerType:      addTileLayerProperties();   break;
-        case Layer::ObjectGroupType:    addObjectGroupProperties(); break;
-        case Layer::ImageLayerType:     addImageLayerProperties();  break;
-        case Layer::GroupLayerType:     addGroupLayerProperties();  break;
+        switch (static_cast<TiledLayer*>(mObject)->layerType()) {
+        case TiledLayer::TileLayerType:      addTileLayerProperties();   break;
+        case TiledLayer::ObjectGroupType:    addObjectGroupProperties(); break;
+        case TiledLayer::ImageLayerType:     addImageLayerProperties();  break;
+        case TiledLayer::GroupLayerType:     addGroupLayerProperties();  break;
         }
         break;
     case Object::TilesetType:           addTilesetProperties(); break;
@@ -1369,7 +1369,7 @@ void PropertyBrowser::updateProperties()
         break;
     }
     case Object::LayerType: {
-        const Layer *layer = static_cast<const Layer*>(mObject);
+        const TiledLayer *layer = static_cast<const TiledLayer*>(mObject);
 
         mIdToProperty[NameProperty]->setValue(layer->name());
         mIdToProperty[VisibleProperty]->setValue(layer->isVisible());
@@ -1378,22 +1378,22 @@ void PropertyBrowser::updateProperties()
         mIdToProperty[OffsetYProperty]->setValue(layer->offset().y());
 
         switch (layer->layerType()) {
-        case Layer::TileLayerType:
+        case TiledLayer::TileLayerType:
             break;
-        case Layer::ObjectGroupType: {
+        case TiledLayer::ObjectGroupType: {
             const ObjectGroup *objectGroup = static_cast<const ObjectGroup*>(layer);
             const QColor color = objectGroup->color();
             mIdToProperty[ColorProperty]->setValue(color);
             mIdToProperty[DrawOrderProperty]->setValue(objectGroup->drawOrder());
             break;
         }
-        case Layer::ImageLayerType: {
-            const ImageLayer *imageLayer = static_cast<const ImageLayer*>(layer);
+        case TiledLayer::ImageLayerType: {
+            const TiledImageLayer *imageLayer = static_cast<const TiledImageLayer*>(layer);
             mIdToProperty[ImageSourceProperty]->setValue(QVariant::fromValue(FilePath { imageLayer->imageSource() }));
             mIdToProperty[ColorProperty]->setValue(imageLayer->transparentColor());
             break;
         }
-        case Layer::GroupLayerType:
+        case TiledLayer::GroupLayerType:
             break;
         }
         break;

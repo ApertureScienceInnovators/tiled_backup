@@ -31,7 +31,7 @@
 
 #include "tiled_global.h"
 
-#include "layer.h"
+#include "tiled_layer.h"
 
 #include <QColor>
 #include <QPixmap>
@@ -43,25 +43,25 @@ namespace Tiled {
 /**
  * An image on a map.
  */
-class TILEDSHARED_EXPORT ImageLayer : public Layer
+class TILEDSHARED_EXPORT TiledImageLayer : public TiledLayer
 {
 public:
     /**
      * Constructor.
      */
-    ImageLayer(const QString &name, int x, int y);
+    TiledImageLayer(const QString &name, int x, int y);
 
     /**
      * Destructor.
      */
-    ~ImageLayer();
+    ~TiledImageLayer();
 
     QSet<SharedTileset> usedTilesets() const override { return QSet<SharedTileset>(); }
     bool referencesTileset(const Tileset *) const override { return false; }
     void replaceReferencesToTileset(Tileset *, Tileset *) override {}
 
-    bool canMergeWith(Layer *) const override { return false; }
-    Layer *mergedWith(Layer *) const override { return nullptr; }
+    bool canMergeWith(TiledLayer *) const override { return false; }
+    TiledLayer *mergedWith(TiledLayer *) const override { return nullptr; }
 
     /**
      * Returns the transparent color, or an invalid color if no transparent
@@ -120,10 +120,10 @@ public:
      */
     bool isEmpty() const override;
 
-    Layer *clone() const override;
+    TiledLayer *clone() const override;
 
 protected:
-    ImageLayer *initializeClone(ImageLayer *clone) const;
+    TiledImageLayer *initializeClone(TiledImageLayer *clone) const;
 
 private:
     QString mImageSource;
@@ -132,7 +132,7 @@ private:
 };
 
 
-inline bool ImageLayer::loadFromImage(const QString &fileName)
+inline bool TiledImageLayer::loadFromImage(const QString &fileName)
 {
     return loadFromImage(QImage(fileName), fileName);
 }

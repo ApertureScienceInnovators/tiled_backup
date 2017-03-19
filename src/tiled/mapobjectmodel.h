@@ -29,7 +29,7 @@
 namespace Tiled {
 
 class GroupLayer;
-class Layer;
+class TiledLayer;
 class MapObject;
 class Map;
 class ObjectGroup;
@@ -75,10 +75,10 @@ public:
 
     Qt::ItemFlags flags(const QModelIndex &index) const override;
 
-    QModelIndex index(Layer *layer) const;
+    QModelIndex index(TiledLayer *layer) const;
     QModelIndex index(MapObject *mapObject, int column = 0) const;
 
-    Layer *toLayer(const QModelIndex &index) const;
+    TiledLayer *toLayer(const QModelIndex &index) const;
     MapObject *toMapObject(const QModelIndex &index) const;
     ObjectGroup *toObjectGroup(const QModelIndex &index) const;
     GroupLayer *toGroupLayer(const QModelIndex &index) const;
@@ -107,8 +107,8 @@ signals:
     void objectsRemoved(const QList<MapObject *> &objects);
 
 private slots:
-    void layerAdded(Layer *layer);
-    void layerChanged(Layer *layer);
+    void layerAdded(TiledLayer *layer);
+    void layerChanged(TiledLayer *layer);
     void layerAboutToBeRemoved(GroupLayer *groupLayer, int index);
     void tileTypeChanged(Tile *tile);
 
@@ -117,8 +117,8 @@ private:
     Map *mMap;
 
     // cache
-    mutable QMap<GroupLayer*, QList<Layer*>> mFilteredLayers;
-    QList<Layer *> &filteredChildLayers(GroupLayer *parentLayer) const;
+    mutable QMap<GroupLayer*, QList<TiledLayer*>> mFilteredLayers;
+    QList<TiledLayer *> &filteredChildLayers(GroupLayer *parentLayer) const;
 
     QIcon mObjectGroupIcon;
 };

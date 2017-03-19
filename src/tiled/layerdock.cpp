@@ -158,7 +158,7 @@ void LayerDock::updateOpacitySlider()
     mUpdatingSlider = false;
 }
 
-void LayerDock::layerChanged(Layer *layer)
+void LayerDock::layerChanged(TiledLayer *layer)
 {
     if (layer != mMapDocument->currentLayer())
         return;
@@ -281,11 +281,11 @@ void LayerView::currentRowChanged(const QModelIndex &proxyIndex)
 void LayerView::indexPressed(const QModelIndex &proxyIndex)
 {
     const QModelIndex index = mProxyModel->mapToSource(proxyIndex);
-    if (Layer *layer = mMapDocument->layerModel()->toLayer(index))
+    if (TiledLayer *layer = mMapDocument->layerModel()->toLayer(index))
         mMapDocument->setCurrentObject(layer);
 }
 
-void LayerView::currentLayerChanged(Layer *layer)
+void LayerView::currentLayerChanged(TiledLayer *layer)
 {
     const LayerModel *layerModel = mMapDocument->layerModel();
     setCurrentIndex(mProxyModel->mapFromSource(layerModel->index(layer)));

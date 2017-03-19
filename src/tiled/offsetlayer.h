@@ -27,7 +27,7 @@
 
 namespace Tiled {
 
-class Layer;
+class TiledLayer;
 
 namespace Internal {
 
@@ -44,7 +44,7 @@ public:
      * within \a bounds, and can optionally wrap on the x or y axis.
      */
     OffsetLayer(MapDocument *mapDocument,
-                Layer *layer,
+                TiledLayer *layer,
                 const QPoint &offset,
                 const QRect &bounds,
                 bool xWrap,
@@ -58,8 +58,8 @@ public:
 private:
     MapDocument *mMapDocument;
     bool mDone;
-    Layer *mOriginalLayer;
-    Layer *mOffsetLayer;
+    TiledLayer *mOriginalLayer;
+    TiledLayer *mOffsetLayer;
     QPointF mOldOffset;
     QPointF mNewOffset;
 };

@@ -32,10 +32,10 @@ SOURCES += compression.cpp \
     gidmapper.cpp \
     grouplayer.cpp \
     hexagonalrenderer.cpp \
-    imagelayer.cpp \
+    tiled_imagelayer.cpp \
     imagereference.cpp \
     isometricrenderer.cpp \
-    layer.cpp \
+    tiled_layer.cpp \
     map.cpp \
     mapobject.cpp \
     mapreader.cpp \
@@ -61,10 +61,10 @@ HEADERS += compression.h \
     gidmapper.h \
     grouplayer.h \
     hexagonalrenderer.h \
-    imagelayer.h \
+    tiled_imagelayer.h \
     imagereference.h \
     isometricrenderer.h \
-    layer.h \
+    tiled_layer.h \
     logginginterface.h \
     map.h \
     mapformat.h \

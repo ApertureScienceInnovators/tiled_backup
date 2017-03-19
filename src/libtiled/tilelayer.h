@@ -31,7 +31,7 @@
 
 #include "tiled_global.h"
 
-#include "layer.h"
+#include "tiled_layer.h"
 #include "tiled.h"
 #include "tile.h"
 #include "tileset.h"
@@ -155,7 +155,7 @@ inline bool Cell::refersTile(const Tile *tile) const
  * Coordinates and regions passed to function parameters are in local
  * coordinates and do not take into account the position of the layer.
  */
-class TILEDSHARED_EXPORT TileLayer : public Layer
+class TILEDSHARED_EXPORT TileLayer : public TiledLayer
 {
 public:
     /**
@@ -312,8 +312,8 @@ public:
                      const QRect &bounds,
                      bool wrapX, bool wrapY);
 
-    bool canMergeWith(Layer *other) const override;
-    Layer *mergedWith(Layer *other) const override;
+    bool canMergeWith(TiledLayer *other) const override;
+    TiledLayer *mergedWith(TiledLayer *other) const override;
 
     /**
      * Returns the region where this tile layer and the given tile layer
@@ -327,7 +327,7 @@ public:
      */
     bool isEmpty() const override;
 
-    virtual Layer *clone() const override;
+    virtual TiledLayer *clone() const override;
 
     // Enable easy iteration over cells with range-based for
     QVector<Cell>::iterator begin() { return mGrid.begin(); }

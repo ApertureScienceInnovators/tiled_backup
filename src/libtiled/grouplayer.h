@@ -20,48 +20,48 @@
 
 #pragma once
 
-#include "layer.h"
+#include "tiled_layer.h"
 
 #include <QList>
 
 namespace Tiled {
 
-class TILEDSHARED_EXPORT GroupLayer : public Layer
+class TILEDSHARED_EXPORT GroupLayer : public TiledLayer
 {
 public:
     GroupLayer(const QString &name, int x, int y);
     ~GroupLayer();
 
     int layerCount() const;
-    Layer *layerAt(int index) const;
-    const QList<Layer*> &layers() const { return mLayers; }
+    TiledLayer *layerAt(int index) const;
+    const QList<TiledLayer*> &layers() const { return mLayers; }
 
-    void addLayer(Layer *layer);
-    void insertLayer(int index, Layer *layer);
-    Layer *takeLayerAt(int index);
+    void addLayer(TiledLayer *layer);
+    void insertLayer(int index, TiledLayer *layer);
+    TiledLayer *takeLayerAt(int index);
 
     bool isEmpty() const override;
     QSet<SharedTileset> usedTilesets() const override;
     bool referencesTileset(const Tileset *tileset) const override;
     void replaceReferencesToTileset(Tileset *oldTileset, Tileset *newTileset) override;
-    bool canMergeWith(Layer *other) const override;
-    Layer *mergedWith(Layer *other) const override;
-    Layer *clone() const override;
+    bool canMergeWith(TiledLayer *other) const override;
+    TiledLayer *mergedWith(TiledLayer *other) const override;
+    TiledLayer *clone() const override;
 
     // Enable easy iteration over children with range-based for
-    QList<Layer*>::iterator begin() { return mLayers.begin(); }
-    QList<Layer*>::iterator end() { return mLayers.end(); }
-    QList<Layer*>::const_iterator begin() const { return mLayers.begin(); }
-    QList<Layer*>::const_iterator end() const { return mLayers.end(); }
+    QList<TiledLayer*>::iterator begin() { return mLayers.begin(); }
+    QList<TiledLayer*>::iterator end() { return mLayers.end(); }
+    QList<TiledLayer*>::const_iterator begin() const { return mLayers.begin(); }
+    QList<TiledLayer*>::const_iterator end() const { return mLayers.end(); }
 
 protected:
     void setMap(Map *map) override;
     GroupLayer *initializeClone(GroupLayer *clone) const;
 
 private:
-    void adoptLayer(Layer *layer);
+    void adoptLayer(TiledLayer *layer);
 
-    QList<Layer*> mLayers;
+    QList<TiledLayer*> mLayers;
 };
 
 
@@ -70,7 +70,7 @@ inline int GroupLayer::layerCount() const
     return mLayers.size();
 }
 
-inline Layer *GroupLayer::layerAt(int index) const
+inline TiledLayer *GroupLayer::layerAt(int index) const
 {
     return mLayers.at(index);
 }

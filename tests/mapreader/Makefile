@@ -319,7 +319,7 @@ compiler_moc_source_make_all: test_mapreader.moc
 compiler_moc_source_clean:
 	-$(DEL_FILE) test_mapreader.moc
 test_mapreader.moc: ../../src/libtiled/map.h \
-		../../src/libtiled/layer.h \
+		../../src/libtiled/tiled_layer.h \
 		../../src/libtiled/object.h \
 		../../src/libtiled/properties.h \
 		../../src/libtiled/tiled_global.h \
@@ -345,7 +345,7 @@ compiler_clean: compiler_moc_source_clean
 ####### Compile
 
 test_mapreader.o: test_mapreader.cpp ../../src/libtiled/map.h \
-		../../src/libtiled/layer.h \
+		../../src/libtiled/tiled_layer.h \
 		../../src/libtiled/object.h \
 		../../src/libtiled/properties.h \
 		../../src/libtiled/tiled_global.h \

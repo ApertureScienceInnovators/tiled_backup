@@ -26,7 +26,7 @@
 
 namespace Tiled {
 
-class Layer;
+class TiledLayer;
 class TileLayer;
 
 namespace Internal {

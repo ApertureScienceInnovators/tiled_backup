@@ -28,7 +28,7 @@
 
 #include "maprenderer.h"
 
-#include "imagelayer.h"
+#include "tiled_imagelayer.h"
 #include "tile.h"
 #include "tilelayer.h"
 
@@ -38,13 +38,13 @@
 
 using namespace Tiled;
 
-QRectF MapRenderer::boundingRect(const ImageLayer *imageLayer) const
+QRectF MapRenderer::boundingRect(const TiledImageLayer *imageLayer) const
 {
     return QRectF(QPointF(), imageLayer->image().size());
 }
 
 void MapRenderer::drawImageLayer(QPainter *painter,
-                                 const ImageLayer *imageLayer,
+                                 const TiledImageLayer *imageLayer,
                                  const QRectF &exposed)
 {
     Q_UNUSED(exposed)

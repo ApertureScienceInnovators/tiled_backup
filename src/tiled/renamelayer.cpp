@@ -31,7 +31,7 @@ using namespace Tiled;
 using namespace Tiled::Internal;
 
 RenameLayer::RenameLayer(MapDocument *mapDocument,
-                         Layer *layer,
+                         TiledLayer *layer,
                          const QString &name):
     mMapDocument(mapDocument),
     mLayer(layer),

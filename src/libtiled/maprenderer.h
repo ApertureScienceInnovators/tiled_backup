@@ -35,12 +35,12 @@
 namespace Tiled {
 
 class Cell;
-class Layer;
+class TiledLayer;
 class Map;
 class MapObject;
 class Tile;
 class TileLayer;
-class ImageLayer;
+class TiledImageLayer;
 
 enum RenderFlag {
     ShowTileObjectOutlines = 0x1
@@ -94,7 +94,7 @@ public:
      * Returns the bounding rectangle in pixels of the given \a imageLayer, as
      * it would be drawn by drawImageLayer().
      */
-    QRectF boundingRect(const ImageLayer *imageLayer) const;
+    QRectF boundingRect(const TiledImageLayer *imageLayer) const;
 
     /**
      * Returns the shape in pixels of the given \a object. This is used for
@@ -141,7 +141,7 @@ public:
      * Draws the given image \a layer using the given \a painter.
      */
     void drawImageLayer(QPainter *painter,
-                        const ImageLayer *imageLayer,
+                        const TiledImageLayer *imageLayer,
                         const QRectF &exposed = QRectF());
 
     /**

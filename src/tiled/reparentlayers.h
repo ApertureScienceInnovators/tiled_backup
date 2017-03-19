@@ -26,7 +26,7 @@
 namespace Tiled {
 
 class GroupLayer;
-class Layer;
+class TiledLayer;
 
 namespace Internal {
 
@@ -39,7 +39,7 @@ class ReparentLayers : public QUndoCommand
 {
 public:
     ReparentLayers(MapDocument *mapDocument,
-                   const QList<Layer *> &layers,
+                   const QList<TiledLayer *> &layers,
                    GroupLayer *layerParent,
                    int index,
                    QUndoCommand *parent = nullptr);
@@ -49,7 +49,7 @@ public:
 
 private:
     MapDocument * const mMapDocument;
-    QList<Layer *> const mLayers;
+    QList<TiledLayer *> const mLayers;
     GroupLayer * const mLayerParent;
     int const mIndex;
 

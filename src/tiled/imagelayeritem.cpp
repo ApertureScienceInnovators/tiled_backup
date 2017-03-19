@@ -30,7 +30,7 @@
 using namespace Tiled;
 using namespace Tiled::Internal;
 
-ImageLayerItem::ImageLayerItem(ImageLayer *layer, MapDocument *mapDocument, QGraphicsItem *parent)
+ImageLayerItem::ImageLayerItem(TiledImageLayer *layer, MapDocument *mapDocument, QGraphicsItem *parent)
     : LayerItem(layer, parent)
     , mMapDocument(mapDocument)
 {

@@ -56,7 +56,7 @@ QModelIndex LayerModel::index(int row, int column, const QModelIndex &parent) co
     }
 
     // Child of a group layer index
-    Layer *layer = toLayer(parent);
+    TiledLayer *layer = toLayer(parent);
     Q_ASSERT(layer);
     if (GroupLayer *groupLayer = layer->asGroupLayer())
         if (row < groupLayer->layerCount())
@@ -78,7 +78,7 @@ QModelIndex LayerModel::parent(const QModelIndex &index) const
 int LayerModel::rowCount(const QModelIndex &parent) const
 {
     if (parent.isValid()) {
-        Layer *layer = toLayer(parent);
+        TiledLayer *layer = toLayer(parent);
         Q_ASSERT(layer);
         if (GroupLayer *groupLayer = layer->asGroupLayer())
             return groupLayer->layerCount();
@@ -103,7 +103,7 @@ QVariant LayerModel::data(const QModelIndex &index, int role) const
     if (index.row() < 0)
         return QVariant();
 
-    Layer *layer = toLayer(index);
+    TiledLayer *layer = toLayer(index);
 
     switch (role) {
     case Qt::DisplayRole:
@@ -111,13 +111,13 @@ QVariant LayerModel::data(const QModelIndex &index, int role) const
         return layer->name();
     case Qt::DecorationRole:
         switch (layer->layerType()) {
-        case Layer::TileLayerType:
+        case TiledLayer::TileLayerType:
             return mTileLayerIcon;
-        case Layer::ObjectGroupType:
+        case TiledLayer::ObjectGroupType:
             return mObjectGroupIcon;
-        case Layer::ImageLayerType:
+        case TiledLayer::ImageLayerType:
             return mImageLayerIcon;
-        case Layer::GroupLayerType:
+        case TiledLayer::GroupLayerType:
             return QApplication::style()->standardIcon(QStyle::SP_DirIcon);
         }
     case Qt::CheckStateRole:
@@ -138,7 +138,7 @@ bool LayerModel::setData(const QModelIndex &index, const QVariant &value,
     if (!index.isValid())
         return false;
 
-    Layer *layer = toLayer(index);
+    TiledLayer *layer = toLayer(index);
 
     if (role == Qt::CheckStateRole) {
         Qt::CheckState c = static_cast<Qt::CheckState>(value.toInt());
@@ -200,7 +200,7 @@ QVariant LayerModel::headerData(int section, Qt::Orientation orientation,
     return QVariant();
 }
 
-QModelIndex LayerModel::index(Layer *layer) const
+QModelIndex LayerModel::index(TiledLayer *layer) const
 {
     if (!layer)
         return QModelIndex();
@@ -218,7 +218,7 @@ QModelIndex LayerModel::index(Layer *layer) const
     return createIndex(row, 0, nullptr);
 }
 
-Layer *LayerModel::toLayer(const QModelIndex &index) const
+TiledLayer *LayerModel::toLayer(const QModelIndex &index) const
 {
     if (!index.isValid())
         return nullptr;
@@ -247,7 +247,7 @@ void LayerModel::setMapDocument(MapDocument *mapDocument)
  * Adds a layer to this model's map, inserting it at as a child of
  * \a parentLayer at the given \a index.
  */
-void LayerModel::insertLayer(GroupLayer *parentLayer, int index, Layer *layer)
+void LayerModel::insertLayer(GroupLayer *parentLayer, int index, TiledLayer *layer)
 {
     QModelIndex parent = LayerModel::index(parentLayer);
     beginInsertRows(parent, index, index);
@@ -264,12 +264,12 @@ void LayerModel::insertLayer(GroupLayer *parentLayer, int index, Layer *layer)
  * returns it. The caller becomes responsible for the lifetime of this
  * layer.
  */
-Layer *LayerModel::takeLayerAt(GroupLayer *parentLayer, int index)
+TiledLayer *LayerModel::takeLayerAt(GroupLayer *parentLayer, int index)
 {
     emit layerAboutToBeRemoved(parentLayer, index);
     QModelIndex parent = LayerModel::index(parentLayer);
     beginRemoveRows(parent, index, index);
-    Layer *layer;
+    TiledLayer *layer;
     if (parentLayer)
         layer = parentLayer->takeLayerAt(index);
     else
@@ -285,7 +285,7 @@ Layer *LayerModel::takeLayerAt(GroupLayer *parentLayer, int index)
  * The map will take ownership over the replacement layer, whereas the caller
  * becomes responsible for the replaced layer.
  */
-void LayerModel::replaceLayer(Layer *layer, Layer *replacement)
+void LayerModel::replaceLayer(TiledLayer *layer, TiledLayer *replacement)
 {
     Q_ASSERT(layer->map() == mMapDocument->map());
     Q_ASSERT(!replacement->map());
@@ -305,7 +305,7 @@ void LayerModel::replaceLayer(Layer *layer, Layer *replacement)
 /**
  * Sets whether the layer at the given index is visible.
  */
-void LayerModel::setLayerVisible(Layer *layer, bool visible)
+void LayerModel::setLayerVisible(TiledLayer *layer, bool visible)
 {
     if (layer->isVisible() == visible)
         return;
@@ -320,7 +320,7 @@ void LayerModel::setLayerVisible(Layer *layer, bool visible)
 /**
  * Sets the opacity of the layer at the given index.
  */
-void LayerModel::setLayerOpacity(Layer *layer, float opacity)
+void LayerModel::setLayerOpacity(TiledLayer *layer, float opacity)
 {
     if (layer->opacity() == opacity)
         return;
@@ -332,7 +332,7 @@ void LayerModel::setLayerOpacity(Layer *layer, float opacity)
 /**
  * Sets the offset of the layer at the given index.
  */
-void LayerModel::setLayerOffset(Layer *layer, const QPointF &offset)
+void LayerModel::setLayerOffset(TiledLayer *layer, const QPointF &offset)
 {
     if (layer->offset() == offset)
         return;
@@ -344,7 +344,7 @@ void LayerModel::setLayerOffset(Layer *layer, const QPointF &offset)
 /**
  * Renames the layer at the given index.
  */
-void LayerModel::renameLayer(Layer *layer, const QString &name)
+void LayerModel::renameLayer(TiledLayer *layer, const QString &name)
 {
     if (layer->name() == name)
         return;
@@ -359,13 +359,13 @@ void LayerModel::renameLayer(Layer *layer, const QString &name)
 /**
  * Collects sibling layers, including siblings of all parents.
  */
-static QList<Layer *> collectAllSiblings(Layer *layer)
+static QList<TiledLayer *> collectAllSiblings(TiledLayer *layer)
 {
-    QList<Layer *> collected;
+    QList<TiledLayer *> collected;
 
     while (layer) {
         const auto& siblings = layer->siblings();
-        for (Layer *sibling : siblings) {
+        for (TiledLayer *sibling : siblings) {
             if (sibling != layer)
                 collected.append(sibling);
         }
@@ -380,14 +380,14 @@ static QList<Layer *> collectAllSiblings(Layer *layer)
   * If any other layer is visible then all layers will be hidden, otherwise
   * the layers will be shown.
   */
-void LayerModel::toggleOtherLayers(Layer *layer)
+void LayerModel::toggleOtherLayers(TiledLayer *layer)
 {
     const auto& otherLayers = collectAllSiblings(layer);
     if (otherLayers.isEmpty())
         return;
 
     bool visibility = true;
-    for (Layer *l : otherLayers) {
+    for (TiledLayer *l : otherLayers) {
         if (l->isVisible()) {
             visibility = false;
             break;
@@ -400,7 +400,7 @@ void LayerModel::toggleOtherLayers(Layer *layer)
     else
         undoStack->beginMacro(tr("Hide Other Layers"));
 
-    for (Layer *l : otherLayers) {
+    for (TiledLayer *l : otherLayers) {
         if (visibility != l->isVisible())
             undoStack->push(new SetLayerVisible(mMapDocument, l, visibility));
     }

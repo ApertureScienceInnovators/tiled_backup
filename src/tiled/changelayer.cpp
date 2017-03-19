@@ -31,7 +31,7 @@ namespace Tiled {
 namespace Internal {
 
 SetLayerVisible::SetLayerVisible(MapDocument *mapDocument,
-                                 Layer *layer,
+                                 TiledLayer *layer,
                                  bool visible)
     : mMapDocument(mapDocument)
     , mLayer(layer)
@@ -54,7 +54,7 @@ void SetLayerVisible::swap()
 
 
 SetLayerOpacity::SetLayerOpacity(MapDocument *mapDocument,
-                                 Layer *layer,
+                                 TiledLayer *layer,
                                  float opacity)
     : mMapDocument(mapDocument)
     , mLayer(layer)
@@ -83,7 +83,7 @@ void SetLayerOpacity::setOpacity(float opacity)
 
 
 SetLayerOffset::SetLayerOffset(MapDocument *mapDocument,
-                               Layer *layer,
+                               TiledLayer *layer,
                                const QPointF &offset,
                                QUndoCommand *parent)
     : QUndoCommand(parent)

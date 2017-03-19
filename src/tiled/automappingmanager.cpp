@@ -58,14 +58,14 @@ void AutomappingManager::autoMap()
     autoMapInternal(QRect(0, 0, w, h), nullptr);
 }
 
-void AutomappingManager::autoMap(const QRegion &where, Layer *touchedLayer)
+void AutomappingManager::autoMap(const QRegion &where, TiledLayer *touchedLayer)
 {
     if (Preferences::instance()->automappingDrawing())
         autoMapInternal(where, touchedLayer);
 }
 
 void AutomappingManager::autoMapInternal(const QRegion &where,
-                                         Layer *touchedLayer)
+                                         TiledLayer *touchedLayer)
 {
     mError.clear();
     mWarning.clear();
@@ -196,8 +196,8 @@ void AutomappingManager::setMapDocument(MapDocument *mapDocument)
     mMapDocument = mapDocument;
 
     if (mMapDocument) {
-        connect(mMapDocument, SIGNAL(regionEdited(QRegion,Layer*)),
-                this, SLOT(autoMap(QRegion,Layer*)));
+        connect(mMapDocument, SIGNAL(regionEdited(QRegion,TiledLayer*)),
+                this, SLOT(autoMap(QRegion,TiledLayer*)));
     }
 
     mLoaded = false;

@@ -39,7 +39,7 @@ bool TmwPlugin::write(const Tiled::Map *map, const QString &fileName)
 
     TileLayer *collisionLayer = nullptr;
 
-    for (Layer *layer : map->layers()) {
+    for (TiledLayer *layer : map->layers()) {
         if (layer->name().compare(QLatin1String("collision"),
                                   Qt::CaseInsensitive) == 0) {
             if (TileLayer *tileLayer = layer->asTileLayer()) {

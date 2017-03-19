@@ -219,27 +219,27 @@ void MapScene::refreshScene()
     updateCurrentLayerHighlight();
 }
 
-void MapScene::createLayerItems(const QList<Layer *> &layers)
+void MapScene::createLayerItems(const QList<TiledLayer *> &layers)
 {
     int layerIndex = 0;
 
-    for (Layer *layer : layers) {
+    for (TiledLayer *layer : layers) {
         LayerItem *layerItem = createLayerItem(layer);
         layerItem->setZValue(layerIndex);
         ++layerIndex;
     }
 }
 
-LayerItem *MapScene::createLayerItem(Layer *layer)
+LayerItem *MapScene::createLayerItem(TiledLayer *layer)
 {
     LayerItem *layerItem = nullptr;
 
     switch (layer->layerType()) {
-    case Layer::TileLayerType:
+    case TiledLayer::TileLayerType:
         layerItem = new TileLayerItem(static_cast<TileLayer*>(layer), mMapDocument);
         break;
 
-    case Layer::ObjectGroupType: {
+    case TiledLayer::ObjectGroupType: {
         auto og = static_cast<ObjectGroup*>(layer);
         const ObjectGroup::DrawOrder drawOrder = og->drawOrder();
         ObjectGroupItem *ogItem = new ObjectGroupItem(og);
@@ -259,11 +259,11 @@ LayerItem *MapScene::createLayerItem(Layer *layer)
         break;
     }
 
-    case Layer::ImageLayerType:
-        layerItem = new ImageLayerItem(static_cast<ImageLayer*>(layer), mMapDocument);
+    case TiledLayer::ImageLayerType:
+        layerItem = new ImageLayerItem(static_cast<TiledImageLayer*>(layer), mMapDocument);
         break;
 
-    case Layer::GroupLayerType:
+    case TiledLayer::GroupLayerType:
         layerItem = new GroupLayerItem(static_cast<GroupLayer*>(layer));
         break;
     }
@@ -341,7 +341,7 @@ void MapScene::updateCurrentLayerHighlight()
     LayerIterator iterator(mMapDocument->map());
     qreal multiplier = 1;
 
-    while (Layer *layer = iterator.next()) {
+    while (TiledLayer *layer = iterator.next()) {
         GroupLayer *groupLayer = layer->asGroupLayer();
         if (!groupLayer)
             mLayerItems.value(layer)->setOpacity(layer->opacity() * multiplier);
@@ -351,7 +351,7 @@ void MapScene::updateCurrentLayerHighlight()
     }
 }
 
-void MapScene::repaintRegion(const QRegion &region, Layer *layer)
+void MapScene::repaintRegion(const QRegion &region, TiledLayer *layer)
 {
     const MapRenderer *renderer = mMapDocument->renderer();
     const QMargins margins = mMapDocument->map()->drawMargins();
@@ -446,7 +446,7 @@ void MapScene::tileLayerDrawMarginsChanged(TileLayer *tileLayer)
     item->syncWithTileLayer();
 }
 
-void MapScene::layerAdded(Layer *layer)
+void MapScene::layerAdded(TiledLayer *layer)
 {
     createLayerItem(layer);
 
@@ -455,13 +455,13 @@ void MapScene::layerAdded(Layer *layer)
         mLayerItems.value(sibling)->setZValue(z++);
 }
 
-void MapScene::layerRemoved(Layer *layer)
+void MapScene::layerRemoved(TiledLayer *layer)
 {
     delete mLayerItems.take(layer);
 }
 
 // Returns whether layerB is drawn above layerA
-static bool isAbove(Layer *layerA, Layer *layerB)
+static bool isAbove(TiledLayer *layerA, TiledLayer *layerB)
 {
     int depthA = layerA->depth();
     int depthB = layerB->depth();
@@ -501,7 +501,7 @@ static bool isAbove(Layer *layerA, Layer *layerB)
  * A layer has changed. This can mean that the layer visibility, opacity or
  * offset changed.
  */
-void MapScene::layerChanged(Layer *layer)
+void MapScene::layerChanged(TiledLayer *layer)
 {
     QGraphicsItem *layerItem = mLayerItems.value(layer);
     Q_ASSERT(layerItem);
@@ -535,7 +535,7 @@ void MapScene::objectGroupChanged(ObjectGroup *objectGroup)
  * When an image layer has changed, it may change size and it may look
  * differently.
  */
-void MapScene::imageLayerChanged(ImageLayer *imageLayer)
+void MapScene::imageLayerChanged(TiledImageLayer *imageLayer)
 {
     ImageLayerItem *item = static_cast<ImageLayerItem*>(mLayerItems.value(imageLayer));
 
@@ -747,7 +747,7 @@ void MapScene::drawForeground(QPainter *painter, const QRectF &rect)
     QPointF offset;
 
     // Take into account the offset of the current layer
-    if (Layer *layer = mMapDocument->currentLayer()) {
+    if (TiledLayer *layer = mMapDocument->currentLayer()) {
         offset = layer->totalOffset();
         painter->translate(offset);
     }

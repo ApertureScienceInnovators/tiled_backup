@@ -57,7 +57,7 @@ TmxRasterizer::~TmxRasterizer()
 {
 }
 
-bool TmxRasterizer::shouldDrawLayer(const Layer *layer)
+bool TmxRasterizer::shouldDrawLayer(const TiledLayer *layer)
 {
     if (layer->isObjectGroup() || layer->isGroupLayer())
         return false;
@@ -134,7 +134,7 @@ int TmxRasterizer::render(const QString &mapFileName,
 
     // Perform a similar rendering than found in exportasimagedialog.cpp
     LayerIterator iterator(map);
-    while (const Layer *layer = iterator.next()) {
+    while (const TiledLayer *layer = iterator.next()) {
         if (!shouldDrawLayer(layer))
             continue;
 
@@ -144,7 +144,7 @@ int TmxRasterizer::render(const QString &mapFileName,
         painter.translate(offset);
 
         const TileLayer *tileLayer = dynamic_cast<const TileLayer*>(layer);
-        const ImageLayer *imageLayer = dynamic_cast<const ImageLayer*>(layer);
+        const TiledImageLayer *imageLayer = dynamic_cast<const TiledImageLayer*>(layer);
 
         if (tileLayer) {
             renderer->drawTileLayer(&painter, tileLayer);

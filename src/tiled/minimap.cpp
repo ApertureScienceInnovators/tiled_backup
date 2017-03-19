@@ -225,7 +225,7 @@ void MiniMap::renderMapToImage()
     renderer->setPainterScale(scale);
 
     LayerIterator iterator(mMapDocument->map());
-    while (const Layer *layer = iterator.next()) {
+    while (const TiledLayer *layer = iterator.next()) {
         if (visibleLayersOnly && layer->isHidden())
             continue;
 
@@ -236,7 +236,7 @@ void MiniMap::renderMapToImage()
 
         const TileLayer *tileLayer = dynamic_cast<const TileLayer*>(layer);
         const ObjectGroup *objGroup = dynamic_cast<const ObjectGroup*>(layer);
-        const ImageLayer *imageLayer = dynamic_cast<const ImageLayer*>(layer);
+        const TiledImageLayer *imageLayer = dynamic_cast<const TiledImageLayer*>(layer);
 
         if (tileLayer && drawTiles) {
             renderer->drawTileLayer(&painter, tileLayer);

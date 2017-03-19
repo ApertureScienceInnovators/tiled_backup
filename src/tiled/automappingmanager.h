@@ -27,7 +27,7 @@
 
 namespace Tiled {
 
-class Layer;
+class TiledLayer;
 
 namespace Internal {
 
@@ -74,7 +74,7 @@ public slots:
     void autoMap();
 
 private slots:
-    void autoMap(const QRegion &where, Layer *touchedLayer);
+    void autoMap(const QRegion &where, TiledLayer *touchedLayer);
 
 private:
     Q_DISABLE_COPY(AutomappingManager)
@@ -98,7 +98,7 @@ private:
      * touching the \a touchedLayer
      * If layer is 0, all Automappers are used.
      */
-    void autoMapInternal(const QRegion &where, Layer *touchedLayer);
+    void autoMapInternal(const QRegion &where, TiledLayer *touchedLayer);
 
     /**
      * deletes all its data structures

@@ -101,8 +101,8 @@ static QRect computeMapRect(const MapRenderer &renderer)
     QRectF rect(QPointF(0, 0), renderer.mapSize());
 
     // Take into account large tiles extending beyond their cell
-    for (const Layer *layer : renderer.map()->layers()) {
-        if (layer->layerType() != Layer::TileLayerType)
+    for (const TiledLayer *layer : renderer.map()->layers()) {
+        if (layer->layerType() != TiledLayer::TileLayerType)
             continue;
 
         const TileLayer *tileLayer = static_cast<const TileLayer*>(layer);
@@ -161,7 +161,7 @@ QImage ThumbnailRenderer::render(const QSize &size) const
     mRenderer->setPainterScale(scale);
 
     LayerIterator iterator(mMap);
-    while (const Layer *layer = iterator.next()) {
+    while (const TiledLayer *layer = iterator.next()) {
         if (mVisibleLayersOnly && layer->isHidden())
             continue;
 
@@ -171,13 +171,13 @@ QImage ThumbnailRenderer::render(const QSize &size) const
         painter.translate(offset);
 
         switch (layer->layerType()) {
-        case Layer::TileLayerType: {
+        case TiledLayer::TileLayerType: {
             const TileLayer *tileLayer = static_cast<const TileLayer*>(layer);
             mRenderer->drawTileLayer(&painter, tileLayer);
             break;
         }
 
-        case Layer::ObjectGroupType: {
+        case TiledLayer::ObjectGroupType: {
             const ObjectGroup *objectGroup = static_cast<const ObjectGroup*>(layer);
             QList<MapObject*> objects = objectGroup->objects();
 
@@ -203,12 +203,12 @@ QImage ThumbnailRenderer::render(const QSize &size) const
             }
             break;
         }
-        case Layer::ImageLayerType: {
-            const ImageLayer *imageLayer = static_cast<const ImageLayer*>(layer);
+        case TiledLayer::ImageLayerType: {
+            const TiledImageLayer *imageLayer = static_cast<const TiledImageLayer*>(layer);
             mRenderer->drawImageLayer(&painter, imageLayer);
             break;
         }
-        case Layer::GroupLayerType: {
+        case TiledLayer::GroupLayerType: {
             // Recursion handled by LayerIterator
             break;
         }

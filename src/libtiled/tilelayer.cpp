@@ -35,7 +35,7 @@
 using namespace Tiled;
 
 TileLayer::TileLayer(const QString &name, int x, int y, int width, int height)
-    : Layer(TileLayerType, name, x, y)
+    : TiledLayer(TileLayerType, name, x, y)
     , mWidth(width)
     , mHeight(height)
     , mGrid(width * height)
@@ -494,12 +494,12 @@ void TileLayer::offsetTiles(const QPoint &offset,
     mGrid = newGrid;
 }
 
-bool TileLayer::canMergeWith(Layer *other) const
+bool TileLayer::canMergeWith(TiledLayer *other) const
 {
     return other->isTileLayer();
 }
 
-Layer *TileLayer::mergedWith(Layer *other) const
+TiledLayer *TileLayer::mergedWith(TiledLayer *other) const
 {
     Q_ASSERT(canMergeWith(other));
 
@@ -553,14 +553,14 @@ bool TileLayer::isEmpty() const
  *
  * \sa Layer::clone()
  */
-Layer *TileLayer::clone() const
+TiledLayer *TileLayer::clone() const
 {
     return initializeClone(new TileLayer(mName, mX, mY, mWidth, mHeight));
 }
 
 TileLayer *TileLayer::initializeClone(TileLayer *clone) const
 {
-    Layer::initializeClone(clone);
+    TiledLayer::initializeClone(clone);
     clone->mGrid = mGrid;
     clone->mUsedTilesets = mUsedTilesets;
     clone->mUsedTilesetsDirty = mUsedTilesetsDirty;

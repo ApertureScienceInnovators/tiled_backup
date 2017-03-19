@@ -221,14 +221,14 @@ QString MapDocument::displayName() const
 /**
   * Returns the sibling index of the given \a layer, or -1 if no layer is given.
   */
-int MapDocument::layerIndex(const Layer *layer) const
+int MapDocument::layerIndex(const TiledLayer *layer) const
 {
     if (!layer)
         return -1;
     return layer->siblingIndex();
 }
 
-void MapDocument::setCurrentLayer(Layer *layer)
+void MapDocument::setCurrentLayer(TiledLayer *layer)
 {
     if (mCurrentLayer == layer)
         return;
@@ -290,14 +290,14 @@ void MapDocument::resizeMap(const QSize &size, const QPoint &offset, bool remove
     QUndoCommand *command = new QUndoCommand(tr("Resize Map"));
 
     LayerIterator iterator(mMap);
-    while (Layer *layer = iterator.next()) {
+    while (TiledLayer *layer = iterator.next()) {
         switch (layer->layerType()) {
-        case Layer::TileLayerType: {
+        case TiledLayer::TileLayerType: {
             TileLayer *tileLayer = static_cast<TileLayer*>(layer);
             new ResizeTileLayer(this, tileLayer, size, offset, command);
             break;
         }
-        case Layer::ObjectGroupType: {
+        case TiledLayer::ObjectGroupType: {
             ObjectGroup *objectGroup = static_cast<ObjectGroup*>(layer);
 
             // Remove objects that will fall outside of the map
@@ -314,15 +314,15 @@ void MapDocument::resizeMap(const QSize &size, const QPoint &offset, bool remove
             }
             break;
         }
-        case Layer::ImageLayerType: {
+        case TiledLayer::ImageLayerType: {
             // Adjust image layer by changing its offset
-            auto imageLayer = static_cast<ImageLayer*>(layer);
+            auto imageLayer = static_cast<TiledImageLayer*>(layer);
             new SetLayerOffset(this, layer,
                                imageLayer->offset() + pixelOffset,
                                command);
             break;
         }
-        case Layer::GroupLayerType: {
+        case TiledLayer::GroupLayerType: {
             // Recursion handled by LayerIterator
             break;
         }
@@ -337,7 +337,7 @@ void MapDocument::resizeMap(const QSize &size, const QPoint &offset, bool remove
     // TODO: Handle layers that don't match the map size correctly
 }
 
-void MapDocument::offsetMap(const QList<Layer*> &layers,
+void MapDocument::offsetMap(const QList<TiledLayer*> &layers,
                             const QPoint &offset,
                             const QRect &bounds,
                             bool wrapX, bool wrapY)
@@ -406,25 +406,25 @@ void MapDocument::rotateSelectedObjects(RotateDirection direction)
  * Adds a layer of the given type to the top of the layer stack. After adding
  * the new layer, emits editLayerNameRequested().
  */
-Layer *MapDocument::addLayer(Layer::TypeFlag layerType)
+TiledLayer *MapDocument::addLayer(TiledLayer::TypeFlag layerType)
 {
-    Layer *layer = nullptr;
+    TiledLayer *layer = nullptr;
     QString name;
 
     switch (layerType) {
-    case Layer::TileLayerType:
+    case TiledLayer::TileLayerType:
         name = tr("Tile Layer %1").arg(mMap->tileLayerCount() + 1);
         layer = new TileLayer(name, 0, 0, mMap->width(), mMap->height());
         break;
-    case Layer::ObjectGroupType:
+    case TiledLayer::ObjectGroupType:
         name = tr("Object Layer %1").arg(mMap->objectGroupCount() + 1);
         layer = new ObjectGroup(name, 0, 0);
         break;
-    case Layer::ImageLayerType:
+    case TiledLayer::ImageLayerType:
         name = tr("Image Layer %1").arg(mMap->imageLayerCount() + 1);
-        layer = new ImageLayer(name, 0, 0);
+        layer = new TiledImageLayer(name, 0, 0);
         break;
-    case Layer::GroupLayerType:
+    case TiledLayer::GroupLayerType:
         name = tr("Group %1").arg(mMap->groupLayerCount() + 1);
         layer = new GroupLayer(name, 0, 0);
         break;
@@ -444,7 +444,7 @@ Layer *MapDocument::addLayer(Layer::TypeFlag layerType)
 /**
  * Creates a new group layer, putting the given \a layer inside the group.
  */
-void MapDocument::groupLayer(Layer *layer)
+void MapDocument::groupLayer(TiledLayer *layer)
 {
     if (!layer)
         return;
@@ -457,7 +457,7 @@ void MapDocument::groupLayer(Layer *layer)
     const int index = layer->siblingIndex() + 1;
     mUndoStack->beginMacro(tr("Group Layer"));
     mUndoStack->push(new AddLayer(this, index, groupLayer, parentLayer));
-    mUndoStack->push(new ReparentLayers(this, QList<Layer*>() << layer, groupLayer, 0));
+    mUndoStack->push(new ReparentLayers(this, QList<TiledLayer*>() << layer, groupLayer, 0));
     mUndoStack->endMacro();
 }
 
@@ -466,13 +466,13 @@ void MapDocument::groupLayer(Layer *layer)
  * group is ungrouped. Otherwise, if the layer is part of a group layer, then
  * it is removed from the group.
  */
-void MapDocument::ungroupLayer(Layer *layer)
+void MapDocument::ungroupLayer(TiledLayer *layer)
 {
     if (!layer)
         return;
 
     GroupLayer *groupLayer = layer->asGroupLayer();
-    QList<Layer *> layers;
+    QList<TiledLayer *> layers;
 
     if (groupLayer) {
         layers = groupLayer->layers();
@@ -504,10 +504,10 @@ void MapDocument::duplicateLayer()
     if (!mCurrentLayer)
         return;
 
-    Layer *duplicate = mCurrentLayer->clone();
+    TiledLayer *duplicate = mCurrentLayer->clone();
     duplicate->setName(tr("Copy of %1").arg(duplicate->name()));
 
-    if (duplicate->layerType() == Layer::ObjectGroupType)
+    if (duplicate->layerType() == TiledLayer::ObjectGroupType)
         static_cast<ObjectGroup*>(duplicate)->resetObjectIds();
 
     auto parentLayer = mCurrentLayer ? mCurrentLayer->parentLayer() : nullptr;
@@ -532,12 +532,12 @@ void MapDocument::mergeLayerDown()
     if (index < 1)
         return;
 
-    Layer *lowerLayer = mCurrentLayer->siblings().at(index - 1);
+    TiledLayer *lowerLayer = mCurrentLayer->siblings().at(index - 1);
 
     if (!lowerLayer->canMergeWith(mCurrentLayer))
         return;
 
-    Layer *merged = lowerLayer->mergedWith(mCurrentLayer);
+    TiledLayer *merged = lowerLayer->mergedWith(mCurrentLayer);
 
     mUndoStack->beginMacro(tr("Merge Layer Down"));
     mUndoStack->push(new AddLayer(this, index - 1, merged, parentLayer));
@@ -549,7 +549,7 @@ void MapDocument::mergeLayerDown()
 /**
  * Moves the given \a layer up, when it is not already at the top of the map.
  */
-void MapDocument::moveLayerUp(Layer *layer)
+void MapDocument::moveLayerUp(TiledLayer *layer)
 {
     if (!layer || !MoveLayer::canMoveUp(*layer))
         return;
@@ -560,7 +560,7 @@ void MapDocument::moveLayerUp(Layer *layer)
 /**
  * Moves the given \a layer up, when it is not already at the bottom of the map.
  */
-void MapDocument::moveLayerDown(Layer *layer)
+void MapDocument::moveLayerDown(TiledLayer *layer)
 {
     if (!layer || !MoveLayer::canMoveDown(*layer))
         return;
@@ -571,7 +571,7 @@ void MapDocument::moveLayerDown(Layer *layer)
 /**
  * Removes the given \a layer.
  */
-void MapDocument::removeLayer(Layer *layer)
+void MapDocument::removeLayer(TiledLayer *layer)
 {
     Q_ASSERT(layer->map() == mMap);
     mUndoStack->push(new RemoveLayer(this,
@@ -584,7 +584,7 @@ void MapDocument::removeLayer(Layer *layer)
   * If any other layer is visible then all layers will be hidden, otherwise
   * the layers will be shown.
   */
-void MapDocument::toggleOtherLayers(Layer *layer)
+void MapDocument::toggleOtherLayers(TiledLayer *layer)
 {
     mLayerModel->toggleOtherLayers(layer);
 }
@@ -838,7 +838,7 @@ void MapDocument::onObjectsMoved(const QModelIndex &parent, int start, int end,
     emit objectsIndexChanged(objectGroup, first, last);
 }
 
-void MapDocument::onLayerAdded(Layer *layer)
+void MapDocument::onLayerAdded(TiledLayer *layer)
 {
     emit layerAdded(layer);
 
@@ -847,25 +847,25 @@ void MapDocument::onLayerAdded(Layer *layer)
         setCurrentLayer(layer);
 }
 
-static void collectObjects(Layer *layer, QList<MapObject*> &objects)
+static void collectObjects(TiledLayer *layer, QList<MapObject*> &objects)
 {
     switch (layer->layerType()) {
-    case Layer::ObjectGroupType:
+    case TiledLayer::ObjectGroupType:
         objects.append(static_cast<ObjectGroup*>(layer)->objects());
         break;
-    case Layer::GroupLayerType:
+    case TiledLayer::GroupLayerType:
         for (auto childLayer : *static_cast<GroupLayer*>(layer))
             collectObjects(childLayer, objects);
         break;
-    case Layer::ImageLayerType:
-    case Layer::TileLayerType:
+    case TiledLayer::ImageLayerType:
+    case TiledLayer::TileLayerType:
         break;
     }
 }
 
 void MapDocument::onLayerAboutToBeRemoved(GroupLayer *groupLayer, int index)
 {
-    Layer *layer = groupLayer ? groupLayer->layerAt(index) : mMap->layerAt(index);
+    TiledLayer *layer = groupLayer ? groupLayer->layerAt(index) : mMap->layerAt(index);
     if (layer == mCurrentObject)
         setCurrentObject(nullptr);
 
@@ -879,7 +879,7 @@ void MapDocument::onLayerAboutToBeRemoved(GroupLayer *groupLayer, int index)
     emit layerAboutToBeRemoved(groupLayer, index);
 }
 
-void MapDocument::onLayerRemoved(Layer *layer)
+void MapDocument::onLayerRemoved(TiledLayer *layer)
 {
     if (mCurrentLayer && mCurrentLayer->isParentOrSelf(layer))
         setCurrentLayer(nullptr);

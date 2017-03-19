@@ -22,7 +22,7 @@
 #include "maptovariantconverter.h"
 
 #include "grouplayer.h"
-#include "imagelayer.h"
+#include "tiled_imagelayer.h"
 #include "map.h"
 #include "mapobject.h"
 #include "objectgroup.h"
@@ -259,23 +259,23 @@ QVariant MapToVariantConverter::propertyTypesToVariant(const Properties &propert
     return variantMap;
 }
 
-QVariant MapToVariantConverter::toVariant(const QList<Layer *> &layers,
+QVariant MapToVariantConverter::toVariant(const QList<TiledLayer *> &layers,
                                           Map::LayerDataFormat format) const
 {
     QVariantList layerVariants;
 
-    for (const Layer *layer : layers) {
+    for (const TiledLayer *layer : layers) {
         switch (layer->layerType()) {
-        case Layer::TileLayerType:
+        case TiledLayer::TileLayerType:
             layerVariants << toVariant(*static_cast<const TileLayer*>(layer), format);
             break;
-        case Layer::ObjectGroupType:
+        case TiledLayer::ObjectGroupType:
             layerVariants << toVariant(*static_cast<const ObjectGroup*>(layer));
             break;
-        case Layer::ImageLayerType:
-            layerVariants << toVariant(*static_cast<const ImageLayer*>(layer));
+        case TiledLayer::ImageLayerType:
+            layerVariants << toVariant(*static_cast<const TiledImageLayer*>(layer));
             break;
-        case Layer::GroupLayerType:
+        case TiledLayer::GroupLayerType:
             layerVariants << toVariant(*static_cast<const GroupLayer*>(layer), format);
         }
     }
@@ -441,7 +441,7 @@ QVariant MapToVariantConverter::toVariant(const TextData &textData) const
     return textVariant;
 }
 
-QVariant MapToVariantConverter::toVariant(const ImageLayer &imageLayer) const
+QVariant MapToVariantConverter::toVariant(const TiledImageLayer &imageLayer) const
 {
     QVariantMap imageLayerVariant;
     imageLayerVariant[QLatin1String("type")] = QLatin1String("imagelayer");
@@ -473,7 +473,7 @@ QVariant MapToVariantConverter::toVariant(const GroupLayer &groupLayer,
 }
 
 void MapToVariantConverter::addLayerAttributes(QVariantMap &layerVariant,
-                                               const Layer &layer) const
+                                               const TiledLayer &layer) const
 {
     layerVariant[QLatin1String("name")] = layer.name();
     layerVariant[QLatin1String("x")] = layer.x();

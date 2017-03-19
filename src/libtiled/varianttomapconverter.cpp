@@ -22,7 +22,7 @@
 #include "varianttomapconverter.h"
 
 #include "grouplayer.h"
-#include "imagelayer.h"
+#include "tiled_imagelayer.h"
 #include "map.h"
 #include "objectgroup.h"
 #include "properties.h"
@@ -102,7 +102,7 @@ Map *VariantToMapConverter::toMap(const QVariant &variant,
 
     const auto layerVariants = variantMap[QLatin1String("layers")].toList();
     for (const QVariant &layerVariant : layerVariants) {
-        Layer *layer = toLayer(layerVariant);
+        TiledLayer *layer = toLayer(layerVariant);
         if (!layer)
             return nullptr;
 
@@ -320,10 +320,10 @@ SharedTileset VariantToMapConverter::toTileset(const QVariant &variant)
     return tileset;
 }
 
-Layer *VariantToMapConverter::toLayer(const QVariant &variant)
+TiledLayer *VariantToMapConverter::toLayer(const QVariant &variant)
 {
     const QVariantMap variantMap = variant.toMap();
-    Layer *layer = nullptr;
+    TiledLayer *layer = nullptr;
 
     if (variantMap[QLatin1String("type")] == QLatin1String("tilelayer"))
         layer = toTileLayer(variantMap);
@@ -538,10 +538,10 @@ ObjectGroup *VariantToMapConverter::toObjectGroup(const QVariantMap &variantMap)
     return objectGroup.take();
 }
 
-ImageLayer *VariantToMapConverter::toImageLayer(const QVariantMap &variantMap)
+TiledImageLayer *VariantToMapConverter::toImageLayer(const QVariantMap &variantMap)
 {
-    typedef QScopedPointer<ImageLayer> ImageLayerPtr;
-    ImageLayerPtr imageLayer(new ImageLayer(variantMap[QLatin1String("name")].toString(),
+    typedef QScopedPointer<TiledImageLayer> ImageLayerPtr;
+    ImageLayerPtr imageLayer(new TiledImageLayer(variantMap[QLatin1String("name")].toString(),
                                             variantMap[QLatin1String("x")].toInt(),
                                             variantMap[QLatin1String("y")].toInt()));
 
@@ -580,7 +580,7 @@ GroupLayer *VariantToMapConverter::toGroupLayer(const QVariantMap &variantMap)
 
     const auto layerVariants = variantMap[QLatin1String("layers")].toList();
     for (const QVariant &layerVariant : layerVariants) {
-        Layer *layer = toLayer(layerVariant);
+        TiledLayer *layer = toLayer(layerVariant);
         if (!layer)
             return nullptr;
 

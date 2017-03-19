@@ -63,9 +63,9 @@ void SwapTiles::swap()
     };
 
     LayerIterator it(mMapDocument->map());
-    while (Layer *layer = it.next()) {
+    while (TiledLayer *layer = it.next()) {
         switch (layer->layerType()) {
-        case Layer::TileLayerType: {
+        case TiledLayer::TileLayerType: {
             auto tileLayer = static_cast<TileLayer*>(layer);
             auto region1 = tileLayer->region(isTile1);
             auto region2 = tileLayer->region(isTile2);
@@ -77,7 +77,7 @@ void SwapTiles::swap()
 
             break;
         }
-        case Layer::ObjectGroupType: {
+        case TiledLayer::ObjectGroupType: {
             for (MapObject *object : *static_cast<ObjectGroup*>(layer)) {
                 if (object->cell().refersTile(tile1))
                     swapObjectTile(object, tile1, tile2);
@@ -86,8 +86,8 @@ void SwapTiles::swap()
             }
             break;
         }
-        case Layer::ImageLayerType:
-        case Layer::GroupLayerType:
+        case TiledLayer::ImageLayerType:
+        case TiledLayer::GroupLayerType:
             break;
         }
     }

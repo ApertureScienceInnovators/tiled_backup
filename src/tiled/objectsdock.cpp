@@ -321,7 +321,7 @@ void ObjectsView::onPressed(const QModelIndex &proxyIndex)
 
     if (MapObject *mapObject = mapObjectModel()->toMapObject(index))
         mMapDocument->setCurrentObject(mapObject);
-    else if (Layer *layer = mapObjectModel()->toLayer(index))
+    else if (TiledLayer *layer = mapObjectModel()->toLayer(index))
         mMapDocument->setCurrentObject(layer);
 }
 

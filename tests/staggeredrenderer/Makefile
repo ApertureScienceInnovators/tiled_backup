@@ -12,7 +12,7 @@ MAKEFILE      = Makefile
 
 CC            = gcc
 CXX           = g++
-DEFINES       = -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_TESTLIB_LIB -DQT_CORE_LIB -DQT_TESTCASE_BUILDDIR='"/home/kai/Desktop/tiled/tests/staggeredrenderer"'
+DEFINES       = -DQT_NO_DEBUG -DQT_GUI_LIB -DQT_TESTLIB_LIB -DQT_CORE_LIB -DQT_TESTCASE_BUILDDIR='"/home/kai/Bacon2D/3rdparty/tiled/tests/staggeredrenderer"'
 CFLAGS        = -m64 -pipe -O2 -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 CXXFLAGS      = -m64 -pipe -O2 -std=c++0x -Wall -W -D_REENTRANT -fPIC $(DEFINES)
 INCPATH       = -I. -I../../src/libtiled -isystem /usr/include/x86_64-linux-gnu/qt5 -isystem /usr/include/x86_64-linux-gnu/qt5/QtGui -isystem /usr/include/x86_64-linux-gnu/qt5/QtTest -isystem /usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64
@@ -33,10 +33,10 @@ MOVE          = mv -f
 TAR           = tar -cf
 COMPRESS      = gzip -9f
 DISTNAME      = staggeredrenderer1.0.0
-DISTDIR = /home/kai/Desktop/tiled/tests/staggeredrenderer/.tmp/staggeredrenderer1.0.0
+DISTDIR = /home/kai/Bacon2D/3rdparty/tiled/tests/staggeredrenderer/.tmp/staggeredrenderer1.0.0
 LINK          = g++
 LFLAGS        = -m64 -Wl,-z,origin '-Wl,-rpath,$$ORIGIN/../../lib' -Wl,-O1
-LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -ltiled -L/home/kai/Desktop/tiled/tests/staggeredrenderer/../../lib -lQt5Gui -lQt5Test -lQt5Core -lGL -lpthread 
+LIBS          = $(SUBLIBS) -L/usr/X11R6/lib64 -ltiled -L/home/kai/Bacon2D/3rdparty/tiled/tests/staggeredrenderer/../../lib -lQt5Gui -lQt5Test -lQt5Core -lGL -lpthread 
 AR            = ar cqs
 RANLIB        = 
 SED           = sed
@@ -319,7 +319,7 @@ compiler_moc_source_make_all: test_staggeredrenderer.moc
 compiler_moc_source_clean:
 	-$(DEL_FILE) test_staggeredrenderer.moc
 test_staggeredrenderer.moc: ../../src/libtiled/map.h \
-		../../src/libtiled/layer.h \
+		../../src/libtiled/tiled_layer.h \
 		../../src/libtiled/object.h \
 		../../src/libtiled/properties.h \
 		../../src/libtiled/tiled_global.h \
@@ -335,7 +335,7 @@ test_staggeredrenderer.moc: ../../src/libtiled/map.h \
 		../../src/libtiled/orthogonalrenderer.h \
 		../../src/libtiled/maprenderer.h \
 		test_staggeredrenderer.cpp
-	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/kai/Desktop/tiled/tests/staggeredrenderer -I/home/kai/Desktop/tiled/src/libtiled -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtTest -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include test_staggeredrenderer.cpp -o test_staggeredrenderer.moc
+	/usr/lib/x86_64-linux-gnu/qt5/bin/moc $(DEFINES) -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++-64 -I/home/kai/Bacon2D/3rdparty/tiled/tests/staggeredrenderer -I/home/kai/Bacon2D/3rdparty/tiled/src/libtiled -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtTest -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I/usr/include/c++/5 -I/usr/include/x86_64-linux-gnu/c++/5 -I/usr/include/c++/5/backward -I/usr/lib/gcc/x86_64-linux-gnu/5/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include test_staggeredrenderer.cpp -o test_staggeredrenderer.moc
 
 compiler_yacc_decl_make_all:
 compiler_yacc_decl_clean:
@@ -348,7 +348,7 @@ compiler_clean: compiler_moc_source_clean
 ####### Compile
 
 test_staggeredrenderer.o: test_staggeredrenderer.cpp ../../src/libtiled/map.h \
-		../../src/libtiled/layer.h \
+		../../src/libtiled/tiled_layer.h \
 		../../src/libtiled/object.h \
 		../../src/libtiled/properties.h \
 		../../src/libtiled/tiled_global.h \

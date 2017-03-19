@@ -105,7 +105,7 @@ void AbstractTool::updateEnabledState()
     setEnabled(mMapDocument != nullptr);
 }
 
-Layer *AbstractTool::currentLayer() const
+TiledLayer *AbstractTool::currentLayer() const
 {
     return mMapDocument ? mMapDocument->currentLayer() : nullptr;
 }

@@ -32,7 +32,7 @@
 
 #include "tiled_global.h"
 
-#include "layer.h"
+#include "tiled_layer.h"
 
 #include <QColor>
 #include <QList>
@@ -45,7 +45,7 @@ class MapObject;
 /**
  * A group of objects on a map.
  */
-class TILEDSHARED_EXPORT ObjectGroup : public Layer
+class TILEDSHARED_EXPORT ObjectGroup : public TiledLayer
 {
 public:
     /**
@@ -167,8 +167,8 @@ public:
     void offsetObjects(const QPointF &offset, const QRectF &bounds,
                        bool wrapX, bool wrapY);
 
-    bool canMergeWith(Layer *other) const override;
-    Layer *mergedWith(Layer *other) const override;
+    bool canMergeWith(TiledLayer *other) const override;
+    TiledLayer *mergedWith(TiledLayer *other) const override;
 
     const QColor &color() const;
     void setColor(const QColor &color);
@@ -176,7 +176,7 @@ public:
     DrawOrder drawOrder() const;
     void setDrawOrder(DrawOrder drawOrder);
 
-    Layer *clone() const override;
+    TiledLayer *clone() const override;
 
     void resetObjectIds();
     int highestObjectId() const;

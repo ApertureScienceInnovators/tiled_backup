@@ -27,29 +27,29 @@
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
  */
 
-#include "imagelayer.h"
+#include "tiled_imagelayer.h"
 #include "map.h"
 
 #include <QBitmap>
 
 using namespace Tiled;
 
-ImageLayer::ImageLayer(const QString &name, int x, int y):
-    Layer(ImageLayerType, name, x, y)
+TiledImageLayer::TiledImageLayer(const QString &name, int x, int y):
+    TiledLayer(ImageLayerType, name, x, y)
 {
 }
 
-ImageLayer::~ImageLayer()
+TiledImageLayer::~TiledImageLayer()
 {
 }
 
-void ImageLayer::resetImage()
+void TiledImageLayer::resetImage()
 {
     mImage = QPixmap();
     mImageSource.clear();
 }
 
-bool ImageLayer::loadFromImage(const QImage &image, const QString &fileName)
+bool TiledImageLayer::loadFromImage(const QImage &image, const QString &fileName)
 {
     mImageSource = fileName;
 
@@ -68,19 +68,19 @@ bool ImageLayer::loadFromImage(const QImage &image, const QString &fileName)
     return true;
 }
 
-bool ImageLayer::isEmpty() const
+bool TiledImageLayer::isEmpty() const
 {
     return mImage.isNull();
 }
 
-Layer *ImageLayer::clone() const
+TiledLayer *TiledImageLayer::clone() const
 {
-    return initializeClone(new ImageLayer(mName, mX, mY));
+    return initializeClone(new TiledImageLayer(mName, mX, mY));
 }
 
-ImageLayer *ImageLayer::initializeClone(ImageLayer *clone) const
+TiledImageLayer *TiledImageLayer::initializeClone(TiledImageLayer *clone) const
 {
-    Layer::initializeClone(clone);
+    TiledLayer::initializeClone(clone);
 
     clone->mImageSource = mImageSource;
     clone->mTransparentColor = mTransparentColor;

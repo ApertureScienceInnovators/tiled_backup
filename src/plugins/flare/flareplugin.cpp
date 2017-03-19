@@ -322,7 +322,7 @@ bool FlarePlugin::write(const Tiled::Map *map, const QString &fileName)
 
     GidMapper gidMapper(map->tilesets());
     // write layers
-    for (Layer *layer : map->layers()) {
+    for (TiledLayer *layer : map->layers()) {
         if (TileLayer *tileLayer = layer->asTileLayer()) {
             out << "[layer]\n";
             out << "type=" << layer->name() << "\n";

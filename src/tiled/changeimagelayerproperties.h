@@ -28,7 +28,7 @@
 
 namespace Tiled {
 
-class ImageLayer;
+class TiledImageLayer;
 
 namespace Internal {
 
@@ -46,7 +46,7 @@ public:
      * @param newPath       the new image source to apply
      */
     ChangeImageLayerProperties(MapDocument *mapDocument,
-                               ImageLayer *imageLayer,
+                               TiledImageLayer *imageLayer,
                                const QColor &newColor,
                                const QString &newPath);
 
@@ -55,7 +55,7 @@ public:
 
 private:
     MapDocument *mMapDocument;
-    ImageLayer *mImageLayer;
+    TiledImageLayer *mImageLayer;
     const QColor mUndoColor;
     const QColor mRedoColor;
     const QString mUndoPath;

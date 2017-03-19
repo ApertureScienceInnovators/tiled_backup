@@ -24,19 +24,19 @@
 
 namespace Tiled {
 
-class Layer;
+class TiledLayer;
 
 namespace Internal {
 
 class LayerItem : public QGraphicsItem
 {
 public:
-    LayerItem(Layer *layer, QGraphicsItem *parent = nullptr);
+    LayerItem(TiledLayer *layer, QGraphicsItem *parent = nullptr);
 
-    Layer *layer() const { return mLayer; }
+    TiledLayer *layer() const { return mLayer; }
 
 private:
-    Layer *mLayer;
+    TiledLayer *mLayer;
 };
 
 } // namespace Internal

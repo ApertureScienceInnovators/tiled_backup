@@ -27,7 +27,7 @@
 
 namespace Tiled {
 
-class Layer;
+class TiledLayer;
 
 namespace Internal {
 
@@ -40,7 +40,7 @@ class SetLayerVisible : public QUndoCommand
 {
 public:
     SetLayerVisible(MapDocument *mapDocument,
-                    Layer *layer,
+                    TiledLayer *layer,
                     bool visible);
 
     void undo() override { swap(); }
@@ -50,7 +50,7 @@ private:
     void swap();
 
     MapDocument *mMapDocument;
-    Layer *mLayer;
+    TiledLayer *mLayer;
     bool mVisible;
 };
 
@@ -61,7 +61,7 @@ class SetLayerOpacity : public QUndoCommand
 {
 public:
     SetLayerOpacity(MapDocument *mapDocument,
-                    Layer *layer,
+                    TiledLayer *layer,
                     float opacity);
 
     void undo() override { setOpacity(mOldOpacity); }
@@ -75,7 +75,7 @@ private:
     void setOpacity(float opacity);
 
     MapDocument *mMapDocument;
-    Layer *mLayer;
+    TiledLayer *mLayer;
     float mOldOpacity;
     float mNewOpacity;
 };
@@ -87,7 +87,7 @@ class SetLayerOffset : public QUndoCommand
 {
 public:
     SetLayerOffset(MapDocument *mapDocument,
-                   Layer *layer,
+                   TiledLayer *layer,
                    const QPointF &offset,
                    QUndoCommand *parent = nullptr);
 
@@ -100,7 +100,7 @@ private:
     void setOffset(const QPointF &offset);
 
     MapDocument *mMapDocument;
-    Layer *mLayer;
+    TiledLayer *mLayer;
     QPointF mOldOffset;
     QPointF mNewOffset;
 };

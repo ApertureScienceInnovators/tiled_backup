@@ -25,7 +25,7 @@
 namespace Tiled {
 
 GroupLayer::GroupLayer(const QString &name, int x, int y):
-    Layer(GroupLayerType, name, x, y)
+    TiledLayer(GroupLayerType, name, x, y)
 {
 }
 
@@ -34,19 +34,19 @@ GroupLayer::~GroupLayer()
     qDeleteAll(mLayers);
 }
 
-void GroupLayer::addLayer(Layer *layer)
+void GroupLayer::addLayer(TiledLayer *layer)
 {
     adoptLayer(layer);
     mLayers.append(layer);
 }
 
-void GroupLayer::insertLayer(int index, Layer *layer)
+void GroupLayer::insertLayer(int index, TiledLayer *layer)
 {
     adoptLayer(layer);
     mLayers.insert(index, layer);
 }
 
-void GroupLayer::adoptLayer(Layer *layer)
+void GroupLayer::adoptLayer(TiledLayer *layer)
 {
     layer->setParentLayer(this);
 
@@ -56,9 +56,9 @@ void GroupLayer::adoptLayer(Layer *layer)
         layer->setMap(nullptr);
 }
 
-Layer *GroupLayer::takeLayerAt(int index)
+TiledLayer *GroupLayer::takeLayerAt(int index)
 {
-    Layer *layer = mLayers.takeAt(index);
+    TiledLayer *layer = mLayers.takeAt(index);
     layer->setMap(nullptr);
     layer->setParentLayer(nullptr);
     return layer;
@@ -73,7 +73,7 @@ QSet<SharedTileset> GroupLayer::usedTilesets() const
 {
     QSet<SharedTileset> tilesets;
 
-    for (const Layer *layer : mLayers)
+    for (const TiledLayer *layer : mLayers)
         tilesets |= layer->usedTilesets();
 
     return tilesets;
@@ -81,7 +81,7 @@ QSet<SharedTileset> GroupLayer::usedTilesets() const
 
 bool GroupLayer::referencesTileset(const Tileset *tileset) const
 {
-    for (const Layer *layer : mLayers)
+    for (const TiledLayer *layer : mLayers)
         if (layer->referencesTileset(tileset))
             return true;
 
@@ -91,11 +91,11 @@ bool GroupLayer::referencesTileset(const Tileset *tileset) const
 void GroupLayer::replaceReferencesToTileset(Tileset *oldTileset, Tileset *newTileset)
 {
     const auto &children = mLayers;
-    for (Layer *layer : children)
+    for (TiledLayer *layer : children)
         layer->replaceReferencesToTileset(oldTileset, newTileset);
 }
 
-bool GroupLayer::canMergeWith(Layer *) const
+bool GroupLayer::canMergeWith(TiledLayer *) const
 {
     // Merging group layers would be possible, but duplicating all child layers
     // is not the right approach.
@@ -103,33 +103,33 @@ bool GroupLayer::canMergeWith(Layer *) const
     return false;
 }
 
-Layer *GroupLayer::mergedWith(Layer *) const
+TiledLayer *GroupLayer::mergedWith(TiledLayer *) const
 {
     return nullptr;
 }
 
-Layer *GroupLayer::clone() const
+TiledLayer *GroupLayer::clone() const
 {
     return initializeClone(new GroupLayer(mName, mX, mY));
 }
 
 void GroupLayer::setMap(Map *map)
 {
-    Layer::setMap(map);
+    TiledLayer::setMap(map);
 
     if (map) {
-        for (Layer *layer : mLayers)
+        for (TiledLayer *layer : mLayers)
             map->adoptLayer(layer);
     } else {
-        for (Layer *layer : mLayers)
+        for (TiledLayer *layer : mLayers)
             layer->setMap(nullptr);
     }
 }
 
 GroupLayer *GroupLayer::initializeClone(GroupLayer *clone) const
 {
-    Layer::initializeClone(clone);
-    for (const Layer *layer : mLayers)
+    TiledLayer::initializeClone(clone);
+    for (const TiledLayer *layer : mLayers)
         clone->addLayer(layer->clone());
     return clone;
 }

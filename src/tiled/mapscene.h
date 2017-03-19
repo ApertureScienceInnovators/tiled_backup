@@ -30,8 +30,8 @@
 
 namespace Tiled {
 
-class ImageLayer;
-class Layer;
+class TiledImageLayer;
+class TiledLayer;
 class MapObject;
 class ObjectGroup;
 class Tile;
@@ -150,7 +150,7 @@ private slots:
     /**
      * Repaints the specified region. The region is in tile coordinates.
      */
-    void repaintRegion(const QRegion &region, Layer *layer);
+    void repaintRegion(const QRegion &region, TiledLayer *layer);
 
     void currentLayerChanged();
 
@@ -158,12 +158,12 @@ private slots:
     void repaintTileset(Tileset *tileset);
     void tileLayerDrawMarginsChanged(TileLayer *tileLayer);
 
-    void layerAdded(Layer *layer);
-    void layerRemoved(Layer *layer);
-    void layerChanged(Layer *layer);
+    void layerAdded(TiledLayer *layer);
+    void layerRemoved(TiledLayer *layer);
+    void layerChanged(TiledLayer *layer);
 
     void objectGroupChanged(ObjectGroup *objectGroup);
-    void imageLayerChanged(ImageLayer *imageLayer);
+    void imageLayerChanged(TiledImageLayer *imageLayer);
 
     void adaptToTilesetTileSizeChanges(Tileset *tileset);
     void adaptToTileSizeChanges(Tile *tile);
@@ -179,8 +179,8 @@ private slots:
     void syncAllObjectItems();
 
 private:
-    void createLayerItems(const QList<Layer *> &layers);
-    LayerItem *createLayerItem(Layer *layer);
+    void createLayerItems(const QList<TiledLayer *> &layers);
+    LayerItem *createLayerItem(TiledLayer *layer);
 
     void updateDefaultBackgroundColor();
     void updateSceneRect();
@@ -198,7 +198,7 @@ private:
     bool mUnderMouse;
     Qt::KeyboardModifiers mCurrentModifiers;
     QPointF mLastMousePos;
-    QMap<Layer*, LayerItem*> mLayerItems;
+    QMap<TiledLayer*, LayerItem*> mLayerItems;
     QGraphicsRectItem *mDarkRectangle;
     QColor mDefaultBackgroundColor;
     ObjectSelectionItem *mObjectSelectionItem;
